@@ -73,6 +73,29 @@
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
   }
 
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #64748b;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .sidebar-link:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+  }
+
+  .sidebar-link.active {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
   .table-row-item {
     transition: all 0.15s ease;
   }
@@ -101,28 +124,13 @@
     border: 1px solid #e2e8f0;
   }
 
-  .nav-tabs .nav-link {
-    border: none;
-    color: #64748b;
-    font-weight: 600;
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem;
-    border-bottom: 2px solid transparent;
-  }
-
-  .nav-tabs .nav-link.active {
-    color: #2563eb;
-    border-bottom: 2px solid #2563eb;
-    background: transparent;
-  }
-
   .catalog-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
   }
   .catalog-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.12);
   }
 </style>
 </head>
@@ -133,28 +141,24 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-          <i class="fa-solid fa-rectangle-ad text-xl"></i>
+        <div id="siteLogoContainer" class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-blue-600 shadow-sm overflow-hidden shrink-0 p-1">
+          <i class="fa-solid fa-rectangle-ad text-2xl" id="defaultLogoIcon"></i>
+          <img id="siteLogoImg" src="" class="w-full h-full object-contain hidden" alt="Belediye Logosu">
         </div>
         <div>
           <h1 class="font-extrabold text-lg text-slate-900 leading-tight">Sapanca Belediyesi</h1>
-          <p class="text-xs text-slate-500 font-semibold">Billboard Reklam & Lokasyon Kataloğu</p>
+          <p class="text-xs text-slate-500 font-semibold">Billboard & Megaboard Reklam Portalı</p>
         </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Canlı Müsaitlik
-        </span>
       </div>
     </div>
   </header>
 
-  <section class="bg-gradient-to-b from-blue-900 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
+  <!-- Hero Banner Section -->
+  <section class="bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
     <div class="max-w-3xl mx-auto relative z-10 space-y-3">
-      <span class="inline-block px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-semibold text-blue-200 border border-white/10">Sapanca Açık Hava Reklam Alanları</span>
-      <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Markanızı Sapanca'nın En Popüler Noktalarında Sergileyin</h2>
-      <p class="text-slate-300 text-sm sm:text-base font-normal">Kiralama bitiş tarihlerini ve detayları görmek için billboard kartlarına tıklayabilirsiniz.</p>
+      <span id="heroBadge" class="inline-block px-3.5 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-semibold text-blue-200 border border-white/15">Sapanca Açık Hava Reklam Alanları</span>
+      <h2 id="heroBaslik" class="text-2xl sm:text-4xl font-extrabold tracking-tight">Markanızı Sapanca'nın En Popüler Noktalarında Sergileyin</h2>
+      <p id="heroAciklama" class="text-slate-300 text-sm sm:text-base font-normal">Sistem üzerindeki aktif Billboard ve Megaboard reklam noktalarını inceleyebilir, kiralama durumlarını anlık takip edebilirsiniz.</p>
     </div>
   </section>
 
@@ -177,165 +181,484 @@
 
   <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 mt-12">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-      <p class="mb-0">© 2026 Sapanca Belediyesi - Tüm Hakları Saklıdır.</p>
-      <button onclick="adminGirisModalAc()" class="text-slate-600 hover:text-slate-400 font-semibold inline-flex items-center gap-1.5 transition">
-        <i class="fa-solid fa-lock text-[10px]"></i> Yönetim Paneli
-      </button>
+      <p class="mb-0">
+        © <span onclick="adminGirisModalAc()" class="cursor-pointer hover:text-white font-bold transition underline underline-offset-4 decoration-blue-500/50" title="Giriş Yap">2026</span> Sapanca Belediyesi - Tüm Hakları Saklıdır.
+      </p>
     </div>
   </footer>
 </div>
 
 <!-- SECTION 2: YÖNETİM PANELİ -->
-<div id="yonetimPaneliSayfasi" class="flex-1 flex-col hidden">
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-          <i class="fa-solid fa-rectangle-ad text-lg"></i>
+<div id="yonetimPaneliSayfasi" class="flex-1 flex flex-col md:flex-row hidden min-h-screen">
+  
+  <!-- SOL SİDEBAR MENÜ -->
+  <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0">
+    <div class="space-y-6">
+      <div class="flex items-center gap-3 px-2 py-1">
+        <div id="adminLogoContainer" class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-blue-600 shadow-sm overflow-hidden shrink-0 p-1">
+          <i class="fa-solid fa-rectangle-ad text-lg" id="adminDefaultLogoIcon"></i>
+          <img id="adminLogoImg" src="" class="w-full h-full object-contain hidden" alt="Belediye Logosu">
         </div>
         <div>
-          <h1 class="font-bold text-base sm:text-lg text-slate-900 leading-tight">Sapanca Belediyesi</h1>
-          <p class="text-xs text-slate-500 font-medium">Billboard Yönetim Paneli</p>
+          <h1 class="font-bold text-sm text-slate-900 leading-tight">Sapanca Bld.</h1>
+          <p class="text-[11px] text-slate-500 font-medium mb-0">Yönetim Paneli</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <button onclick="sayfaDegistir('vitrin')" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold px-3.5 py-2 rounded-xl transition">
-          <i class="fa-solid fa-eye"></i>
-          <span class="hidden sm:inline">Ana Vitrine Dön</span>
-        </button>
-
-        <button data-bs-toggle="modal" data-bs-target="#kayitModal" onclick="formuTemizle()" 
-          class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-md shadow-blue-500/20 transition">
-          <i class="fa-solid fa-plus"></i>
-          <span>Yeni Kayıt Ekle</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
-    <div class="white-card p-4 sm:p-5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
-      <div class="relative flex-1 min-w-[260px]">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-        <input type="text" id="searchInput" oninput="filtreleVeAra()" 
-          placeholder="Konum, marka, afiş veya telefon ara..." 
-          class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition">
-      </div>
-
-      <div class="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 shrink-0">
-        <button id="btn-Hepsi" onclick="tabloyuGoster('Hepsi')" class="filter-btn active text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
-          <span>Tümü</span>
-          <span id="badge-hepsi" class="bg-white/20 text-current text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
-        </button>
-
-        <button id="btn-Dolu" onclick="tabloyuGoster('Dolu')" class="filter-btn text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
-          <i class="fa-solid fa-circle text-rose-500 text-[8px]"></i>
-          <span>Dolu</span>
-          <span id="badge-dolu" class="bg-slate-200 text-slate-700 text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
-        </button>
-
-        <button id="btn-Boş" onclick="tabloyuGoster('Boş')" class="filter-btn text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
-          <i class="fa-solid fa-circle text-emerald-500 text-[8px]"></i>
-          <span>Boş</span>
-          <span id="badge-bos" class="bg-slate-200 text-slate-700 text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
-        </button>
-
-        <button id="btn-Bekleyen" onclick="tabloyuGoster('Bekleyen')" class="filter-btn text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
-          <i class="fa-solid fa-hourglass-start text-purple-500 text-xs"></i>
-          <span>Sırada Bekleyenler</span>
-          <span id="badge-bekleyen" class="bg-purple-100 text-purple-800 text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
-        </button>
-
-        <button id="btn-Bitenler" onclick="tabloyuGoster('Bitenler')" class="filter-btn text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
-          <i class="fa-solid fa-clock text-amber-500 text-xs"></i>
-          <span>Süresi Bitenler</span>
-          <span id="badge-bitenler" class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
-        </button>
-      </div>
+      <nav class="space-y-1.5">
+        <div onclick="adminMenuDegistir('dashboard')" id="nav-dashboard" class="sidebar-link active">
+          <i class="fa-solid fa-chart-line w-5 text-center"></i>
+          <span>Genel Yönetim</span>
+        </div>
+        <div onclick="adminMenuDegistir('analiz')" id="nav-analiz" class="sidebar-link">
+          <i class="fa-solid fa-chart-pie w-5 text-center text-purple-600"></i>
+          <span>Analiz & Raporlar</span>
+        </div>
+        <div onclick="adminMenuDegistir('gecmis')" id="nav-gecmis" class="sidebar-link">
+          <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
+          <span>Geçmiş İşlemler</span>
+        </div>
+        <div data-bs-toggle="modal" data-bs-target="#sabitBillboardModal" onclick="sabitFormuTemizle()" class="sidebar-link">
+          <i class="fa-solid fa-map-pin w-5 text-center text-amber-600"></i>
+          <span>Pano Tanımla (Sabit)</span>
+        </div>
+        <div data-bs-toggle="modal" data-bs-target="#ayarlarModal" class="sidebar-link">
+          <i class="fa-solid fa-sliders w-5 text-center"></i>
+          <span>Site & Logo Ayarları</span>
+        </div>
+      </nav>
     </div>
 
-    <!-- Metrik Kartları -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="white-card p-5 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Toplam Billboard</p>
-          <h3 id="stat-toplam" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
-          <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
-            <i class="fa-solid fa-location-dot text-blue-500"></i> Kayıtlı lokasyonlar
-          </p>
+    <div class="pt-4 border-t border-slate-100 space-y-2">
+      <button data-bs-toggle="modal" data-bs-target="#kayitModal" onclick="formuTemizle()" 
+        class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 rounded-xl shadow-md transition">
+        <i class="fa-solid fa-plus"></i>
+        <span>Yeni Kiralama Ekle</span>
+      </button>
+
+      <button onclick="sayfaDegistir('vitrin')" class="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 rounded-xl transition">
+        <i class="fa-solid fa-eye"></i>
+        <span>Ana Vitrine Dön</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- SAĞ İÇERİK ALANI -->
+  <main class="flex-1 p-4 sm:p-8 space-y-6 overflow-y-auto">
+    
+    <!-- EKRAN 1: GENEL YÖNETİM -->
+    <div id="adminEkran-dashboard" class="space-y-6">
+      <div class="white-card p-4 sm:p-5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+        <div class="relative flex-1 min-w-[260px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input type="text" id="searchInput" oninput="filtreleVeAra()" 
+            placeholder="Konum, marka, afiş veya telefon ara..." 
+            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 transition">
         </div>
-        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
-          <i class="fa-solid fa-map-location-dot"></i>
+
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 shrink-0">
+          <button id="btn-Hepsi" onclick="tabloyuGoster('Hepsi')" class="filter-btn active text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2">
+            <span>Tümü</span>
+            <span id="badge-hepsi" class="bg-white/20 text-current text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
+          </button>
+
+          <button id="btn-Dolu" onclick="tabloyuGoster('Dolu')" class="filter-btn text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2">
+            <i class="fa-solid fa-circle text-rose-500 text-[8px]"></i>
+            <span>Dolu</span>
+            <span id="badge-dolu" class="bg-slate-200 text-slate-700 text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
+          </button>
+
+          <button id="btn-Boş" onclick="tabloyuGoster('Boş')" class="filter-btn text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl flex items-center gap-2">
+            <i class="fa-solid fa-circle text-emerald-500 text-[8px]"></i>
+            <span>Boş</span>
+            <span id="badge-bos" class="bg-slate-200 text-slate-700 text-[11px] px-2 py-0.5 rounded-md font-bold">0</span>
+          </button>
         </div>
       </div>
 
-      <div class="white-card p-5 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-rose-600">Dolu Konumlar</p>
-          <h3 id="stat-dolu" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
-          <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
-            <i class="fa-solid fa-circle-check text-rose-500"></i> Aktif kiralamalar
-          </p>
+      <!-- Metrik Kartları -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="white-card p-5 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Toplam Panolar</p>
+            <h3 id="stat-toplam" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
+            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot text-blue-500 me-1"></i> Kayıtlı noktalar</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl font-bold">
-          <i class="fa-solid fa-rectangle-ad"></i>
+
+        <div class="white-card p-5 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-rose-600">Dolu Konumlar</p>
+            <h3 id="stat-dolu" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
+            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-circle-check text-rose-500 me-1"></i> Aktif kiralama</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-rectangle-ad"></i>
+          </div>
+        </div>
+
+        <div class="white-card p-5 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-emerald-600">Boş / Müsait</p>
+            <h3 id="stat-bos" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
+            <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-check text-emerald-500 me-1"></i> Kiralamaya hazır</p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
+            <i class="fa-solid fa-square-check"></i>
+          </div>
+        </div>
+
+        <div class="white-card p-4 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Doluluk Oranı</p>
+            <div id="stat-oran" class="text-2xl font-extrabold text-slate-900 mt-1">0%</div>
+            <p class="text-[11px] text-slate-500 mt-1">Reklam kapasitesi</p>
+          </div>
+          <div class="w-16 h-16 relative flex items-center justify-center">
+            <canvas id="dolulukGrafigi"></canvas>
+          </div>
         </div>
       </div>
 
-      <div class="white-card p-5 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-emerald-600">Boş / Müsait</p>
-          <h3 id="stat-bos" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
-          <p class="text-xs text-slate-500 mt-1 flex items-center gap-1">
-            <i class="fa-solid fa-check text-emerald-500"></i> Kiralamaya uygun
-          </p>
+      <!-- Tablo Container -->
+      <div class="white-card overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <h2 class="text-base font-bold text-slate-900 mb-0">Billboard & Megaboard Kiralama Listesi</h2>
+            <span id="filtreEtiketi" class="text-xs font-bold px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg">Tüm Liste</span>
+          </div>
         </div>
-        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
-          <i class="fa-solid fa-square-check"></i>
-        </div>
-      </div>
 
-      <div class="white-card p-4 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Doluluk Oranı</p>
-          <div id="stat-oran" class="text-2xl font-extrabold text-slate-900 mt-1">0%</div>
-          <p class="text-[11px] text-slate-500 mt-1">Reklam kapasitesi</p>
-        </div>
-        <div class="w-16 h-16 relative flex items-center justify-center">
-          <canvas id="dolulukGrafigi"></canvas>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-3.5 px-6">Konum / Tür</th>
+                <th class="py-3.5 px-6">Marka / Telefon</th>
+                <th class="py-3.5 px-6">Afiş Adı</th>
+                <th class="py-3.5 px-6">Kalan Süre / Bitiş</th>
+                <th class="py-3.5 px-6">Hesaplanan Ücret</th>
+                <th class="py-3.5 px-6">Durum</th>
+                <th class="py-3.5 px-6 text-right">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody id="tabloGövdesi" class="divide-y divide-slate-200 bg-white"></tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- Tablo Container -->
-    <div class="white-card overflow-hidden">
-      <div class="px-6 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <h2 class="text-base font-bold text-slate-900 mb-0">Billboard Listesi</h2>
-          <span id="filtreEtiketi" class="text-xs font-bold px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg">Tüm Liste</span>
+    <!-- EKRAN 2: ANALİZ VE KİRALAMA RAPORLARI -->
+    <div id="adminEkran-analiz" class="space-y-6 hidden">
+      <div class="white-card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 mb-1">Kiralama & Gelir Analiz Paneli</h2>
+          <p class="text-xs text-slate-500 mb-0">Lokasyonların performans verileri ve süresi dolmuş kiralama analizleri.</p>
         </div>
-        <p class="text-xs text-slate-500 hidden sm:block">Detay veya harita açmak için lokasyona tıklayın</p>
+        
+        <!-- ZAMAN ARALIĞI FİLTRESİ -->
+        <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1.5 rounded-xl">
+          <i class="fa-solid fa-calendar-days text-slate-400 text-xs ms-2"></i>
+          <span class="text-xs font-bold text-slate-600">Zaman Aralığı:</span>
+          <select id="analizZamanFiltresi" onchange="analizleriGuncelle()" class="bg-white border border-slate-200 text-xs font-bold text-slate-800 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-blue-500">
+            <option value="hepsi">Tüm Zamanlar</option>
+            <option value="1ay">Son 1 Ay</option>
+            <option value="3ay">Son 3 Ay</option>
+            <option value="6ay">Son 6 Ay</option>
+            <option value="1yil">Son 1 Yıl</option>
+            <option value="3yil">Son 3 Yıl</option>
+          </select>
+        </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm">
-          <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
-            <tr>
-              <th class="py-3.5 px-6">Konum</th>
-              <th class="py-3.5 px-6">Marka / Telefon</th>
-              <th class="py-3.5 px-6">Afiş Adı</th>
-              <th class="py-3.5 px-6">Kalan Süre / Bitiş</th>
-              <th class="py-3.5 px-6">Ücret</th>
-              <th class="py-3.5 px-6">Durum</th>
-              <th class="py-3.5 px-6 text-right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody id="tabloGövdesi" class="divide-y divide-slate-200 bg-white"></tbody>
-        </table>
+      <!-- Finansal İstatistik Kartları -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="white-card p-5 border-l-4 border-l-emerald-500">
+          <p class="text-xs font-bold uppercase text-slate-500">Toplam Tamamlanan Gelir</p>
+          <h3 id="analiz-yillik-gelir" class="text-2xl font-extrabold text-slate-900 mt-1">0 TL</h3>
+          <p class="text-[11px] text-slate-500 mt-1">Seçilen döneme ait toplam ciro</p>
+        </div>
+
+        <div class="white-card p-5 border-l-4 border-l-blue-500">
+          <p class="text-xs font-bold uppercase text-slate-500">Aylık Ortalama Gelir</p>
+          <h3 id="analiz-aylik-gelir" class="text-2xl font-extrabold text-slate-900 mt-1">0 TL</h3>
+          <p class="text-[11px] text-slate-500 mt-1">Hesaplanan ortalama aylık getiri</p>
+        </div>
+
+        <div class="white-card p-5 border-l-4 border-l-purple-500">
+          <p class="text-xs font-bold uppercase text-slate-500">Tamamlanan Kiralama Sayısı</p>
+          <h3 id="analiz-toplam-islem" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
+          <p class="text-[11px] text-slate-500 mt-1">Süresi biten işlem adedi</p>
+        </div>
+
+        <div class="white-card p-5 border-l-4 border-l-amber-500">
+          <p class="text-xs font-bold uppercase text-slate-500">Megaboard Oranı</p>
+          <h3 id="analiz-megaboard-orani" class="text-2xl font-extrabold text-slate-900 mt-1">0%</h3>
+          <p class="text-[11px] text-slate-500 mt-1">Megaboard kiralama payı</p>
+        </div>
+      </div>
+
+      <!-- Popüler ve Pasif Lokasyon Listesi -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="white-card p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-fire text-amber-500 text-lg"></i>
+              <h3 class="font-bold text-base text-slate-900 mb-0">En Çok Kiralanan Konumlar</h3>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400">(Süresi Biten Kiralamalar)</span>
+          </div>
+          <div id="enCokKiralananList" class="space-y-3"></div>
+        </div>
+
+        <div class="white-card p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-snowflake text-blue-400 text-lg"></i>
+              <h3 class="font-bold text-base text-slate-900 mb-0">En Az Kiralanan Konumlar</h3>
+            </div>
+            <span class="text-[11px] font-semibold text-slate-400">(Süresi Biten Kiralamalar)</span>
+          </div>
+          <div id="enAzKiralananList" class="space-y-3"></div>
+        </div>
       </div>
     </div>
+
+    <!-- EKRAN 3: GEÇMİŞ İŞLEMLER VE ARŞİV TABLOSU (ARAMA KUTUSU EKLENDİ) -->
+    <div id="adminEkran-gecmis" class="space-y-6 hidden">
+      <div class="white-card p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 mb-1">Geçmiş & Arşivlenmiş Reklam Kayıtları</h2>
+          <p class="text-xs text-slate-500 mb-0">Süresi dolduğu için otomatik silinen veya sonlandırılan kiralama arşivi.</p>
+        </div>
+
+        <!-- GEÇMİŞ İŞLEMLER ARAMA İNPUTU -->
+        <div class="relative w-full sm:w-72">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="gecmisSearchInput" oninput="gecmisTablosunuGoster()" 
+            placeholder="Geçmiş kayıtlarda ara..." 
+            class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 transition">
+        </div>
+
+        <button onclick="gecmisiTemizle()" class="btn btn-sm btn-outline-danger font-bold rounded-xl px-3 py-2 text-xs shrink-0">
+          <i class="fa-solid fa-trash-can me-1"></i> Tüm Geçmişi Temizle
+        </button>
+      </div>
+
+      <div class="white-card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-bold tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-3.5 px-6">Konum / Tür</th>
+                <th class="py-3.5 px-6">Eski Marka</th>
+                <th class="py-3.5 px-6">Afiş Adı</th>
+                <th class="py-3.5 px-6">Kiralama Tarihleri</th>
+                <th class="py-3.5 px-6">İşlem Ücreti</th>
+                <th class="py-3.5 px-6 text-right">İşlem</th>
+              </tr>
+            </thead>
+            <tbody id="gecmisTabloGövdesi" class="divide-y divide-slate-200 bg-white"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
+</div>
+
+<!-- MODAL 1: SABİT BİLLBOARD BİLGİLERİ EKLEME/DÜZENLEME -->
+<div class="modal fade" id="sabitBillboardModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-xl">
+      <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h4 class="text-lg font-bold text-slate-900 mb-0">Sabit Reklam Panosu Bilgileri Tanımla</h4>
+          <p class="text-xs text-slate-500 mt-0.5">Buradaki fotoğraf, konum ve açıklama bilgisi kiralama bitse de sabit kalır.</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Konumu Seçin</label>
+          <select id="sabitKonumSelect" onchange="sabitBilgiYukle()" class="form-select text-sm rounded-xl py-2.5">
+            <option value="">Konum Seçiniz...</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Türü (Varsayılan)</label>
+          <select id="sabitPanoTuru" class="form-select text-sm rounded-xl py-2.5">
+            <option value="Billboard">Billboard</option>
+            <option value="Megaboard">Megaboard</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label text-xs font-bold text-slate-600 uppercase">Google Maps Linki / Koordinat</label>
+          <input type="text" id="sabitMapsUrl" class="form-control text-sm rounded-xl py-2.5" placeholder="https://maps.google.com/?q=...">
+        </div>
+
+        <div>
+          <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Hakkında Yazı / Açıklama (Vitrin İçin)</label>
+          <textarea id="sabitAciklama" rows="3" class="form-control text-sm rounded-xl p-3" placeholder="Örn: Sapanca ana giriş kavşağında yüksek görünürlüklü LED aydınlatmalı sabit reklam alanı."></textarea>
+        </div>
+
+        <div>
+          <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Sabit Görseli / Fotoğrafı</label>
+          <input type="text" id="sabitFotoUrl" class="form-control text-sm rounded-xl py-2.5 mb-2" placeholder="Görsel Bağlantısı (URL)">
+          <input type="file" id="sabitFotoFile" accept="image/*" onchange="sabitResimBase64Cevir()" class="form-control text-xs rounded-xl">
+          <input type="hidden" id="sabitFotoBase64">
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
+        <button type="button" class="btn btn-light rounded-xl text-sm font-semibold border-slate-300" data-bs-dismiss="modal">İptal</button>
+        <button type="button" onclick="sabitBilgiKaydet()" class="btn btn-primary bg-amber-600 hover:bg-amber-700 border-none rounded-xl text-sm font-semibold px-5">
+          <i class="fa-solid fa-floppy-disk me-1.5"></i> Sabit Bilgileri Kaydet
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 2: YENİ KİRALAMA EKLEME -->
+<div class="modal fade" id="kayitModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-xl">
+      <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h4 class="text-lg font-bold text-slate-900 mb-0">Billboard / Megaboard Reklam Kiralama Formu</h4>
+          <p class="text-xs text-slate-500 mt-0.5">Seçilen türe ve tarihe göre sistem fiyatı otomatik hesaplar.</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="p-6">
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">Kiralanacak Konum</label>
+            <select id="konum" class="form-select text-sm rounded-xl py-2.5">
+              <option value="">Yer Seçiniz...</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Türü</label>
+            <select id="panoTuru" onchange="otomatikFiyatHesapla()" class="form-select text-sm rounded-xl py-2.5 font-bold text-blue-700">
+              <option value="Billboard">Billboard (Standart)</option>
+              <option value="Megaboard">Megaboard (Büyük Boy)</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">Marka / Kurum Adı</label>
+            <input type="text" id="marka" class="form-control text-sm rounded-xl py-2.5" placeholder="Örn: Sapanca Turizm">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">Afiş Adı / Kampanya</label>
+            <input type="text" id="afis" class="form-control text-sm rounded-xl py-2.5" placeholder="Örn: Yaz Festivali 2026">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">İletişim Telefonu</label>
+            <input type="text" id="tel" class="form-control text-sm rounded-xl py-2.5" placeholder="0532 000 0000">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">Başlangıç Tarihi</label>
+            <input type="date" id="bas" onchange="otomatikFiyatHesapla()" class="form-control text-sm rounded-xl py-2.5">
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label text-xs font-bold text-slate-600 uppercase">Bitiş Tarihi</label>
+            <input type="date" id="bit" onchange="otomatikFiyatHesapla()" class="form-control text-sm rounded-xl py-2.5">
+          </div>
+
+          <!-- OTOMATİK HESAPLANAN ÜCRET KUTUSU -->
+          <div class="col-12">
+            <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-900 block">Sistem Tarafından Otomatik Hesaplanan Ücret</span>
+                <span id="fiyatDetayAçıklama" class="text-xs text-slate-500">Tarih seçildiğinde hesaplanacaktır.</span>
+              </div>
+              <div class="text-right">
+                <span id="hesaplananFiyatRozeti" class="text-xl font-extrabold text-blue-700">0 TL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
+        <button type="button" class="btn btn-light rounded-xl text-sm font-semibold border-slate-300" data-bs-dismiss="modal">İptal</button>
+        <button type="button" onclick="kaydet()" class="btn btn-primary rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 px-5 py-2.5">
+          <i class="fa-solid fa-floppy-disk me-1.5"></i> Kiralamayı Kaydet
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Yönetim Paneli Site Logo ve Görsel Ayarları -->
+<div class="modal fade" id="ayarlarModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-xl">
+      <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-slate-900 mb-0">Yönetim & Görsel Ayarları</h4>
+            <p class="text-xs text-slate-500 mb-0">Logo yükleyin ve ana sayfa vitrin başlığını değiştirin.</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="p-6 space-y-5">
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h5 class="text-xs font-bold uppercase tracking-wider text-slate-700">Belediye Logo Ayarları</h5>
+          <div>
+            <label class="form-label text-xs font-bold text-slate-600">Logo Bağlantısı (URL) veya Görsel Seçin</label>
+            <input type="text" id="settingLogoUrl" class="form-control text-sm rounded-xl py-2 mb-2" placeholder="https://domain.com/logo.png">
+            <input type="file" id="settingLogoFile" accept="image/*" onchange="logoBase64Cevir()" class="form-control text-xs rounded-xl">
+            <input type="hidden" id="settingLogoBase64">
+          </div>
+          <div class="flex items-center gap-3 pt-2">
+            <span class="text-xs text-slate-500 font-semibold">Önizleme:</span>
+            <div id="logoPreviewBox" class="w-10 h-10 rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden bg-white p-1">
+              <i class="fa-solid fa-rectangle-ad text-slate-400" id="prevDefaultIcon"></i>
+              <img id="prevLogoImg" src="" class="w-full h-full object-contain hidden" alt="Önizleme">
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h5 class="text-xs font-bold uppercase tracking-wider text-slate-700">Ana Sayfa Hero Banner Düzenleme</h5>
+          <div>
+            <label class="form-label text-xs font-bold text-slate-600">Rozet Metni (Üst Etiket)</label>
+            <input type="text" id="settingHeroBadge" class="form-control text-sm rounded-xl py-2">
+          </div>
+          <div>
+            <label class="form-label text-xs font-bold text-slate-600">Ana Başlık</label>
+            <input type="text" id="settingHeroBaslik" class="form-control text-sm rounded-xl py-2">
+          </div>
+          <div>
+            <label class="form-label text-xs font-bold text-slate-600">Alt Açıklama Metni</label>
+            <textarea id="settingHeroAciklama" rows="2" class="form-control text-sm rounded-xl p-2.5"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
+        <button type="button" class="btn btn-light rounded-xl text-sm font-semibold border-slate-300" data-bs-dismiss="modal">İptal</button>
+        <button type="button" onclick="ayarlariKaydet()" class="btn btn-primary rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 px-5">
+          <i class="fa-solid fa-floppy-disk me-1.5"></i> Ayarları Kaydet
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal: Şifreli Admin Girişi -->
@@ -363,14 +686,14 @@
   </div>
 </div>
 
-<!-- Modal: Müşteri/Vitrin İçin Billboard Detay Görünümü -->
+<!-- Modal: Vitrin Billboard Detay Görünümü -->
 <div class="modal fade" id="vitrinDetayModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content shadow-xl overflow-hidden">
-      <div class="relative bg-slate-900 h-64 sm:h-80 overflow-hidden flex items-center justify-center">
+      <div class="relative bg-slate-100 h-64 sm:h-80 overflow-hidden flex items-center justify-center">
         <img id="vitrinModalImg" src="" class="w-full h-full object-cover" alt="Billboard Görseli">
         <button type="button" class="btn-close btn-close-white absolute top-4 right-4 z-10 bg-black/40 p-2.5 rounded-full" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div id="vitrinModalBadge" class="absolute bottom-4 left-4"></div>
+        <div id="vitrinModalBadge" class="absolute bottom-4 left-4 flex items-center gap-2"></div>
       </div>
       <div class="p-6 space-y-4">
         <div class="flex items-start justify-between gap-4 border-b border-slate-100 pb-3">
@@ -383,20 +706,8 @@
           </a>
         </div>
 
-        <div id="vitrinModalTarihBox" class="p-4 rounded-xl border border-amber-200 bg-amber-50/70 hidden">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg font-bold shrink-0">
-              <i class="fa-solid fa-calendar-xmark"></i>
-            </div>
-            <div>
-              <h5 class="text-xs font-bold uppercase tracking-wider text-amber-900 mb-0.5">Reklam Bitiş Tarihi</h5>
-              <p id="vitrinModalTarihTxt" class="text-sm font-bold text-slate-800 mb-0">-</p>
-            </div>
-          </div>
-        </div>
-
         <div id="vitrinModalAciklamaBox" class="bg-blue-50/70 p-4 rounded-xl border border-blue-100 hidden">
-          <h5 class="text-xs font-bold uppercase tracking-wider text-blue-900 mb-1">Billboard Açıklaması</h5>
+          <h5 class="text-xs font-bold uppercase tracking-wider text-blue-900 mb-1">Pano Açıklaması</h5>
           <p id="vitrinModalAciklama" class="text-sm text-slate-700 mb-0 leading-relaxed font-normal"></p>
         </div>
       </div>
@@ -407,164 +718,12 @@
   </div>
 </div>
 
-<!-- Modal: Yönetim Bilgi Kartı -->
-<div class="modal fade" id="bilgiKartalModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content shadow-xl">
-      <div class="p-6 border-b border-slate-200 bg-slate-50 relative">
-        <button type="button" class="btn-close absolute top-4 right-4" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="flex items-center gap-3">
-          <h3 id="infoCardKonum" class="text-xl font-bold text-slate-900 mb-0">-</h3>
-          <a id="infoCardMapsBtn" href="#" target="_blank" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-lg font-bold hover:bg-red-100 transition inline-flex items-center gap-1.5">
-            <i class="fa-solid fa-map-location-dot"></i> Maps'te Aç
-          </a>
-        </div>
-        
-        <ul class="nav nav-tabs border-b border-slate-200 mt-3" id="detailTabs" role="tablist">
-          <li class="nav-item">
-            <button class="nav-link active" id="tab-ana-btn" data-bs-toggle="tab" data-bs-target="#tab-ana" type="button">
-              <i class="fa-solid fa-rectangle-ad me-1.5"></i> Ana Afiş
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" id="tab-ust-btn" data-bs-toggle="tab" data-bs-target="#tab-ust" type="button">
-              <i class="fa-solid fa-bolt text-emerald-600 me-1.5"></i> Üst Afişler <span id="count-ust" class="badge bg-emerald-100 text-emerald-800 rounded-pill ms-1">0</span>
-            </button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" id="tab-siradaki-btn" data-bs-toggle="tab" data-bs-target="#tab-siradaki" type="button">
-              <i class="fa-solid fa-hourglass-start text-purple-600 me-1.5"></i> Sıradakiler / Kuyruk <span id="count-siradaki" class="badge bg-purple-100 text-purple-800 rounded-pill ms-1">0</span>
-            </button>
-          </li>
-        </ul>
-      </div>
-
-      <div class="p-6 tab-content" id="detailTabsContent">
-        <div class="tab-pane fade show active" id="tab-ana" role="tabpanel">
-          <div id="anaAfisIcerik" class="space-y-3"></div>
-        </div>
-
-        <div class="tab-pane fade" id="tab-ust" role="tabpanel">
-          <div id="ustAfislerListesi" class="space-y-3"></div>
-        </div>
-
-        <div class="tab-pane fade" id="tab-siradaki" role="tabpanel">
-          <div id="siradakiAfislerListesi" class="space-y-3"></div>
-        </div>
-      </div>
-
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
-        <button type="button" class="btn btn-light rounded-xl text-sm font-semibold border-slate-300" data-bs-dismiss="modal">Kapat</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Kayıt Formu -->
-<div class="modal fade" id="kayitModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content shadow-xl">
-      <div class="p-6 border-b border-slate-200 flex items-center justify-between">
-        <div>
-          <h4 class="text-lg font-bold text-slate-900 mb-0">Billboard Kayıt & Düzenleme Formu</h4>
-          <p class="text-xs text-slate-500 mt-0.5">Kiralama detaylarını, harita konumunu ve görsel yükleyin.</p>
-        </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="p-6">
-        <div class="row g-4">
-          <div class="col-12">
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-              <div class="flex items-center gap-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="kayitTuru" id="typeAna" value="ana" checked>
-                  <label class="form-check-label font-bold text-sm text-slate-800" for="typeAna">📌 Ana Reklam</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="kayitTuru" id="typeUst" value="ust">
-                  <label class="form-check-label font-bold text-sm text-emerald-900" for="typeUst">⚡ Üst Afiş Katmanı</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="kayitTuru" id="typeSira" value="sira">
-                  <label class="form-check-label font-bold text-sm text-purple-900" for="typeSira">⏳ Sıraya/Kuyruğa Ekle</label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Konum Seçimi</label>
-            <select id="konum" class="form-select text-sm rounded-xl py-2.5">
-              <option value="">Yer Seçiniz...</option>
-            </select>
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Google Maps Linki / Koordinat</label>
-            <input type="text" id="mapsUrl" class="form-control text-sm rounded-xl py-2.5" placeholder="https://maps.google.com/?q=...">
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Marka / Kurum Adı</label>
-            <input type="text" id="marka" class="form-control text-sm rounded-xl py-2.5" placeholder="Örn: Sapanca Turizm">
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Afiş Adı / Kampanya</label>
-            <input type="text" id="afis" class="form-control text-sm rounded-xl py-2.5" placeholder="Örn: Yaz Festivali 2026">
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">İletişim Telefonu</label>
-            <input type="text" id="tel" class="form-control text-sm rounded-xl py-2.5" placeholder="0532 000 0000">
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Kiralama Ücreti (TL)</label>
-            <input type="number" id="ucret" class="form-control text-sm rounded-xl py-2.5" placeholder="5000">
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Başlangıç Tarihi</label>
-            <input type="date" id="bas" class="form-control text-sm rounded-xl py-2.5">
-          </div>
-
-          <div class="col-12 col-md-6">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Bitiş Tarihi</label>
-            <input type="date" id="bit" class="form-control text-sm rounded-xl py-2.5">
-          </div>
-
-          <div class="col-12">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Billboard Açıklaması / Notlar (Yalnızca Vitrinde Görünür)</label>
-            <textarea id="aciklama" rows="3" class="form-control text-sm rounded-xl p-3" placeholder="Örn: Sapanca ana giriş kavşağında yüksek görünürlüklü LED aydınlatmalı billboard."></textarea>
-          </div>
-
-          <div class="col-12">
-            <label class="form-label text-xs font-bold text-slate-600 uppercase tracking-wider">Billboard Afiş Fotoğrafı</label>
-            <input type="text" id="fUrl" class="form-control text-sm rounded-xl py-2.5 mb-2" placeholder="Görsel Bağlantısı (URL)">
-            <div class="flex items-center gap-2">
-              <input type="file" id="fotoFile" accept="image/*" onchange="resimBase64Cevir()" class="form-control text-xs rounded-xl">
-            </div>
-            <input type="hidden" id="fotoBase64">
-          </div>
-        </div>
-      </div>
-      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
-        <button type="button" class="btn btn-light rounded-xl text-sm font-semibold border-slate-300" data-bs-dismiss="modal">İptal</button>
-        <button type="button" onclick="kaydet()" class="btn btn-primary rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 px-5 py-2.5">
-          <i class="fa-solid fa-floppy-disk me-1.5"></i> Kaydet / Güncelle
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- JS Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, remove, push } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAsFrr2_s6PLqanm9TX8RpGi-6Du6gRvM0",
@@ -596,15 +755,423 @@ let gecerliFiltre = 'Hepsi';
 let gecerliVitrinFiltre = 'Hepsi';
 let duzenlenenDbKey = null;
 
-const aylarTr = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylul", "Ekim", "Kasım", "Aralık"];
-const gunlerTr = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
-
-try {
-  const cachedData = localStorage.getItem('sapanca_billboard_cache');
-  if (cachedData) {
-    localVeriHafizasi = JSON.parse(cachedData);
+function selectboxlariDoldur() {
+  const konumSelect = document.getElementById('konum');
+  const sabitSelect = document.getElementById('sabitKonumSelect');
+  if(konumSelect && konumSelect.options.length <= 1) {
+    billboardlar.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b;
+      opt.textContent = b;
+      konumSelect.appendChild(opt);
+    });
   }
-} catch (e) {}
+  if(sabitSelect && sabitSelect.options.length <= 1) {
+    billboardlar.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b;
+      opt.textContent = b;
+      sabitSelect.appendChild(opt);
+    });
+  }
+}
+selectboxlariDoldur();
+
+// BILLBOARD VE MEGABOARD FİYAT MOTORU (Sezon Dışı %40 İndirim Uygulaması)
+window.otomatikFiyatHesapla = function(basStr, bitStr) {
+  const baslikInput = basStr || document.getElementById('bas')?.value;
+  const bitisInput = bitStr || document.getElementById('bit')?.value;
+  const tur = document.getElementById('panoTuru')?.value || 'Billboard';
+
+  if (!baslikInput || !bitisInput) {
+    if(!basStr) {
+      document.getElementById('hesaplananFiyatRozeti').innerText = "0 TL";
+      document.getElementById('fiyatDetayAçıklama').innerText = "Lütfen başlangıç ve bitiş tarihini seçiniz.";
+    }
+    return { toplamTutar: 0, detayText: "" };
+  }
+
+  const d1 = new Date(baslikInput);
+  const d2 = new Date(bitisInput);
+
+  if (d2 < d1) {
+    if(!basStr) {
+      document.getElementById('hesaplananFiyatRozeti').innerText = "0 TL";
+      document.getElementById('fiyatDetayAçıklama').innerText = "Bitiş tarihi başlangıçtan önce olamaz.";
+    }
+    return { toplamTutar: 0, detayText: "Geçersiz Tarih" };
+  }
+
+  const diffTime = Math.abs(d2 - d1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  let aySayisi = Math.round(diffDays / 30.43);
+  if (aySayisi < 1) aySayisi = 1;
+
+  let birimFiyat = 16500;
+
+  if (tur === 'Megaboard') {
+    if (aySayisi >= 12) birimFiyat = 25000;
+    else if (aySayisi >= 6) birimFiyat = 12500;
+    else if (aySayisi >= 3) birimFiyat = 16500;
+    else birimFiyat = 20000;
+  } else {
+    if (aySayisi >= 12) birimFiyat = 20000;
+    else if (aySayisi >= 6) birimFiyat = 10000;
+    else if (aySayisi >= 3) birimFiyat = 13500;
+    else birimFiyat = 16500;
+  }
+
+  let brutTutar = aySayisi * birimFiyat;
+
+  // 5, 6, 7, 8, 9 Aylar Dışında %40 İndirim Uygulaması
+  const sezonAylari = [4, 5, 6, 7, 8]; // Mayıs - Eylül
+  let sezonDisiMı = true;
+  let tempDate = new Date(d1);
+  while (tempDate <= d2) {
+    if (sezonAylari.includes(tempDate.getMonth())) {
+      sezonDisiMı = false;
+      break;
+    }
+    tempDate.setDate(tempDate.getDate() + 1);
+  }
+
+  let indirimMiktari = 0;
+  if (sezonDisiMı) {
+    indirimMiktari = brutTutar * 0.40;
+  }
+
+  const netTutar = Math.round(brutTutar - indirimMiktari);
+  const detayMetni = `${tur} - ${aySayisi} Ay (${birimFiyat.toLocaleString('tr-TR')} TL/ay)` + (sezonDisiMı ? ' - %40 Sezon Dışı İndirimi Uygulandı' : '');
+
+  if(!basStr) {
+    document.getElementById('hesaplananFiyatRozeti').innerText = `${netTutar.toLocaleString('tr-TR')} TL`;
+    document.getElementById('fiyatDetayAçıklama').innerText = detayMetni;
+  }
+
+  return { toplamTutar: netTutar, detayText: detayMetni };
+}
+
+// OTOMATİK SÜRE KONTROLÜ VE ARŞİVLEME MOTORU
+function otomatiksuresiBitenleriTemizle(allData) {
+  const activeBoards = allData.billboardlar || {};
+  const bugun = new Date();
+  bugun.setHours(0, 0, 0, 0);
+
+  Object.keys(activeBoards).forEach(bName => {
+    const item = activeBoards[bName];
+    if (item.bit) {
+      const bitisTarihi = new Date(item.bit);
+      bitisTarihi.setHours(0, 0, 0, 0);
+
+      if (bitisTarihi < bugun) {
+        push(ref(db, 'gecmisIslemler'), {
+          konum: bName,
+          tur: item.tur || 'Billboard',
+          marka: item.marka || '',
+          afis: item.afis || '',
+          tel: item.tel || '',
+          bas: item.bas || '',
+          bit: item.bit || '',
+          ucret: item.ucret || 0,
+          arsivlenmeTarihi: Date.now()
+        });
+
+        remove(ref(db, 'billboardlar/' + bName));
+      }
+    }
+  });
+}
+
+// LOGO & SITE AYARLARI KAYDETME
+window.logoBase64Cevir = function() {
+  const file = document.getElementById('settingLogoFile').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onloadend = function() {
+    document.getElementById('settingLogoBase64').value = reader.result;
+    logoOnizlemeGuncelle(reader.result);
+  }
+  reader.readAsDataURL(file);
+}
+
+function logoOnizlemeGuncelle(imgSrc) {
+  const prevImg = document.getElementById('prevLogoImg');
+  const prevIcon = document.getElementById('prevDefaultIcon');
+  if(imgSrc) {
+    prevImg.src = imgSrc;
+    prevImg.classList.remove('hidden');
+    prevIcon.classList.add('hidden');
+  } else {
+    prevImg.classList.add('hidden');
+    prevIcon.classList.remove('hidden');
+  }
+}
+
+window.ayarlariKaydet = function() {
+  const logoUrl = document.getElementById('settingLogoUrl').value.trim();
+  const logoBase64 = document.getElementById('settingLogoBase64').value;
+  const finalLogo = logoBase64 || logoUrl;
+
+  const heroBadge = document.getElementById('settingHeroBadge').value.trim();
+  const heroBaslik = document.getElementById('settingHeroBaslik').value.trim();
+  const heroAciklama = document.getElementById('settingHeroAciklama').value.trim();
+
+  const settingsObj = {
+    logo: finalLogo,
+    heroBadge: heroBadge || "Sapanca Açık Hava Reklam Alanları",
+    heroBaslik: heroBaslik || "Markanızı Sapanca'nın En Popüler Noktalarında Sergileyin",
+    heroAciklama: heroAciklama || "Sistem üzerindeki aktif haritalı billboard noktalarını inceleyebilir..."
+  };
+
+  set(ref(db, 'siteSettings'), settingsObj).then(() => {
+    const modalEl = document.getElementById('ayarlarModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    if (modalInstance) modalInstance.hide();
+    alert("Site ayarları ve logo başarıyla kaydedildi!");
+  }).catch(err => alert("Ayarlar kaydedilirken hata oluştu: " + err.message));
+}
+
+// Firebase Realtime Listener
+onValue(ref(db), (snapshot) => {
+  const allData = snapshot.val() || {};
+  localVeriHafizasi = allData;
+  try {
+    localStorage.setItem('sapanca_billboard_cache', JSON.stringify(allData));
+  } catch(e){}
+
+  if (allData.siteSettings && allData.siteSettings.logo) {
+    const lUrl = allData.siteSettings.logo;
+    const siteImg = document.getElementById('siteLogoImg');
+    const defaultIcon = document.getElementById('defaultLogoIcon');
+    const adminImg = document.getElementById('adminLogoImg');
+    const adminDefaultIcon = document.getElementById('adminDefaultLogoIcon');
+
+    if (siteImg) {
+      siteImg.src = lUrl;
+      siteImg.classList.remove('hidden');
+      if (defaultIcon) defaultIcon.classList.add('hidden');
+    }
+    if (adminImg) {
+      adminImg.src = lUrl;
+      adminImg.classList.remove('hidden');
+      if (adminDefaultIcon) adminDefaultIcon.classList.add('hidden');
+    }
+  }
+
+  otomatiksuresiBitenleriTemizle(allData);
+
+  kataloguGoster();
+  if (!document.getElementById('yonetimPaneliSayfasi').classList.contains('hidden')) {
+    tabloyuGoster(gecerliFiltre);
+    gecmisTablosunuGoster();
+    analizleriGuncelle();
+    istatistikleriGuncelle();
+  }
+});
+
+// GÜNCELLENMİŞ ANALİZ VE KİRALAMA RAPORU MOTORU
+window.analizleriGuncelle = function() {
+  const gecmis = localVeriHafizasi.gecmisIslemler || {};
+  const zamanFiltresi = document.getElementById('analizZamanFiltresi')?.value || 'hepsi';
+
+  let konumKiralamaSayilari = {};
+  billboardlar.forEach(b => konumKiralamaSayilari[b] = 0);
+
+  let toplamCiro = 0;
+  let toplamIslemSayisi = 0;
+  let megaboardSayisi = 0;
+
+  const simdi = Date.now();
+  let zamanSiniriMs = 0;
+
+  if (zamanFiltresi === '1ay') zamanSiniriMs = 30 * 24 * 60 * 60 * 1000;
+  else if (zamanFiltresi === '3ay') zamanSiniriMs = 90 * 24 * 60 * 60 * 1000;
+  else if (zamanFiltresi === '6ay') zamanSiniriMs = 180 * 24 * 60 * 60 * 1000;
+  else if (zamanFiltresi === '1yil') zamanSiniriMs = 365 * 24 * 60 * 60 * 1000;
+  else if (zamanFiltresi === '3yil') zamanSiniriMs = 3 * 365 * 24 * 60 * 60 * 1000;
+
+  Object.keys(gecmis).forEach(k => {
+    const item = gecmis[k];
+    const kayitTarihi = item.arsivlenmeTarihi || item.olusturmaTarihi || 0;
+
+    if (zamanSiniriMs > 0 && (simdi - kayitTarihi) > zamanSiniriMs) {
+      return;
+    }
+
+    if (item.konum) {
+      konumKiralamaSayilari[item.konum] = (konumKiralamaSayilari[item.konum] || 0) + 1;
+    }
+    toplamCiro += (Number(item.ucret) || 0);
+    toplamIslemSayisi++;
+    if (item.tur === 'Megaboard') megaboardSayisi++;
+  });
+
+  document.getElementById('analiz-yillik-gelir').innerText = `${toplamCiro.toLocaleString('tr-TR')} TL`;
+  document.getElementById('analiz-aylik-gelir').innerText = `${Math.round(toplamCiro / 12).toLocaleString('tr-TR')} TL`;
+  document.getElementById('analiz-toplam-islem').innerText = toplamIslemSayisi;
+  
+  const megaboardOrani = toplamIslemSayisi > 0 ? Math.round((megaboardSayisi / toplamIslemSayisi) * 100) : 0;
+  document.getElementById('analiz-megaboard-orani').innerText = `%${megaboardOrani}`;
+
+  const siraliKonumlar = Object.keys(konumKiralamaSayilari).sort((a,b) => konumKiralamaSayilari[b] - konumKiralamaSayilari[a]);
+
+  const enCokBox = document.getElementById('enCokKiralananList');
+  if(enCokBox) {
+    enCokBox.innerHTML = "";
+    siraliKonumlar.slice(0, 5).forEach((konum, idx) => {
+      const adet = konumKiralamaSayilari[konum];
+      const div = document.createElement('div');
+      div.className = "flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl";
+      div.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="w-6 h-6 rounded-full bg-amber-500 text-white font-extrabold text-xs flex items-center justify-center">${idx + 1}</span>
+          <span class="font-bold text-slate-800 text-sm">${konum}</span>
+        </div>
+        <span class="bg-amber-100 text-amber-900 font-extrabold text-xs px-2.5 py-1 rounded-lg">${adet} Defa Kiralandı</span>
+      `;
+      enCokBox.appendChild(div);
+    });
+  }
+
+  const enAzBox = document.getElementById('enAzKiralananList');
+  if(enAzBox) {
+    enAzBox.innerHTML = "";
+    siraliKonumlar.slice(-5).reverse().forEach((konum, idx) => {
+      const adet = konumKiralamaSayilari[konum];
+      const div = document.createElement('div');
+      div.className = "flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl";
+      div.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="w-6 h-6 rounded-full bg-slate-400 text-white font-extrabold text-xs flex items-center justify-center">${idx + 1}</span>
+          <span class="font-bold text-slate-800 text-sm">${konum}</span>
+        </div>
+        <span class="bg-slate-200 text-slate-700 font-bold text-xs px-2.5 py-1 rounded-lg">${adet} Kiralama</span>
+      `;
+      enAzBox.appendChild(div);
+    });
+  }
+}
+
+// SABİT BİLLBOARD BİLGİLERİ İŞLEMLERİ
+window.sabitFormuTemizle = function() {
+  document.getElementById('sabitKonumSelect').value = "";
+  document.getElementById('sabitPanoTuru').value = "Billboard";
+  document.getElementById('sabitMapsUrl').value = "";
+  document.getElementById('sabitAciklama').value = "";
+  document.getElementById('sabitFotoUrl').value = "";
+  document.getElementById('sabitFotoBase64').value = "";
+  document.getElementById('sabitFotoFile').value = "";
+}
+
+window.sabitBilgiYukle = function() {
+  const konum = document.getElementById('sabitKonumSelect').value;
+  if (!konum) return;
+
+  const sabitVeri = (localVeriHafizasi.sabitBillboardlar || {})[konum] || {};
+  document.getElementById('sabitPanoTuru').value = sabitVeri.tur || "Billboard";
+  document.getElementById('sabitMapsUrl').value = sabitVeri.mapsUrl || "";
+  document.getElementById('sabitAciklama').value = sabitVeri.aciklama || "";
+  document.getElementById('sabitFotoUrl').value = sabitVeri.foto && !sabitVeri.foto.startsWith('data:') ? sabitVeri.foto : "";
+  document.getElementById('sabitFotoBase64').value = sabitVeri.foto && sabitVeri.foto.startsWith('data:') ? sabitVeri.foto : "";
+}
+
+window.sabitResimBase64Cevir = function() {
+  const file = document.getElementById('sabitFotoFile').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onloadend = function() {
+    document.getElementById('sabitFotoBase64').value = reader.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+window.sabitBilgiKaydet = function() {
+  const konum = document.getElementById('sabitKonumSelect').value;
+  if (!konum) {
+    alert("Lütfen bir konum seçin!");
+    return;
+  }
+
+  const tur = document.getElementById('sabitPanoTuru').value;
+  const mapsUrl = document.getElementById('sabitMapsUrl').value;
+  const aciklama = document.getElementById('sabitAciklama').value;
+  const fotoUrl = document.getElementById('sabitFotoUrl').value;
+  const fotoBase64 = document.getElementById('sabitFotoBase64').value;
+  const foto = fotoBase64 || fotoUrl || "";
+
+  set(ref(db, 'sabitBillboardlar/' + konum), {
+    tur, mapsUrl, aciklama, foto, guncellemeTarihi: Date.now()
+  }).then(() => {
+    bootstrap.Modal.getInstance(document.getElementById('sabitBillboardModal'))?.hide();
+    sabitFormuTemizle();
+  }).catch(err => alert("Hata: " + err.message));
+}
+
+// YENİ KİRALAMA EKLEME
+window.formuTemizle = function() {
+  duzenlenenDbKey = null;
+  document.getElementById('konum').value = "";
+  document.getElementById('panoTuru').value = "Billboard";
+  document.getElementById('marka').value = "";
+  document.getElementById('afis').value = "";
+  document.getElementById('tel').value = "";
+  document.getElementById('bas').value = "";
+  document.getElementById('bit').value = "";
+  document.getElementById('hesaplananFiyatRozeti').innerText = "0 TL";
+  document.getElementById('fiyatDetayAçıklama').innerText = "Lütfen başlangıç ve bitiş tarihini seçiniz.";
+}
+
+window.kaydet = function() {
+  let konum = document.getElementById('konum').value;
+  const tur = document.getElementById('panoTuru').value;
+  const marka = document.getElementById('marka').value;
+  const afis = document.getElementById('afis').value;
+  const tel = document.getElementById('tel').value;
+  const bas = document.getElementById('bas').value;
+  const bit = document.getElementById('bit').value;
+
+  if (!konum) {
+    alert("Lütfen konum seçin!");
+    return;
+  }
+
+  const fiyatObj = otomatikFiyatHesapla(bas, bit);
+  const ucret = fiyatObj.toplamTutar;
+
+  const kayitVerisi = {
+    konum, tur, marka, afis, tel, ucret, bas, bit, olusturmaTarihi: Date.now()
+  };
+
+  set(ref(db, 'billboardlar/' + konum), kayitVerisi).then(() => {
+    bootstrap.Modal.getInstance(document.getElementById('kayitModal'))?.hide();
+    formuTemizle();
+    kataloguGoster();
+  }).catch(err => alert("Kayıt hatası: " + err.message));
+}
+
+// SOL MENÜ GEÇİŞLERİ
+window.adminMenuDegistir = function(hedefSekme) {
+  document.getElementById('adminEkran-dashboard').classList.add('hidden');
+  document.getElementById('adminEkran-analiz').classList.add('hidden');
+  document.getElementById('adminEkran-gecmis').classList.add('hidden');
+  
+  document.getElementById('nav-dashboard').classList.remove('active');
+  document.getElementById('nav-analiz').classList.remove('active');
+  document.getElementById('nav-gecmis').classList.remove('active');
+
+  if (hedefSekme === 'gecmis') {
+    document.getElementById('adminEkran-gecmis').classList.remove('hidden');
+    document.getElementById('nav-gecmis').classList.add('active');
+    gecmisTablosunuGoster();
+  } else if (hedefSekme === 'analiz') {
+    document.getElementById('adminEkran-analiz').classList.remove('hidden');
+    document.getElementById('nav-analiz').classList.add('active');
+    analizleriGuncelle();
+  } else {
+    document.getElementById('adminEkran-dashboard').classList.remove('hidden');
+    document.getElementById('nav-dashboard').classList.add('active');
+  }
+}
 
 window.adminGirisModalAc = function() {
   document.getElementById('adminSifreInput').value = "";
@@ -640,127 +1207,126 @@ window.sayfaDegistir = function(hedefSayfa) {
   }
 }
 
-function tarihFormatlaMetin(tarihStr) {
-  if (!tarihStr) return "-";
-  const parts = tarihStr.split('-');
-  if (parts.length !== 3) return tarihStr;
-  const yil = parseInt(parts[0], 10);
-  const ayNum = parseInt(parts[1], 10) - 1;
-  const gun = parseInt(parts[2], 10);
-
-  const d = new Date(yil, ayNum, gun);
-  const gunAdi = gunlerTr[d.getDay()] || '';
-
-  const gg = gun < 10 ? '0' + gun : gun;
-  const aa = (ayNum + 1) < 10 ? '0' + (ayNum + 1) : (ayNum + 1);
-  const ayAdi = aylarTr[ayNum] || '';
-
-  return `${gg}.${aa}.${yil} (${gun} ${ayAdi} ${gunAdi})`;
-}
-
 function tarihFormatla(tarihStr) {
   if (!tarihStr) return "-";
   const parts = tarihStr.split('-');
   if (parts.length !== 3) return tarihStr;
-  const yil = parseInt(parts[0], 10);
-  const ayNum = parseInt(parts[1], 10) - 1;
-  const gun = parseInt(parts[2], 10);
-
-  const d = new Date(yil, ayNum, gun);
-  const gunAdi = gunlerTr[d.getDay()] || '';
-
-  const gg = gun < 10 ? '0' + gun : gun;
-  const aa = (ayNum + 1) < 10 ? '0' + (ayNum + 1) : (ayNum + 1);
-  const ayAdi = aylarTr[ayNum] || '';
-
-  return `<div>${gg}.${aa}.${yil}</div><div class="text-xs text-slate-400 font-normal">(${gun} ${ayAdi} ${gunAdi})</div>`;
+  return `${parts[2]}.${parts[1]}.${parts[0]}`;
 }
 
-window.resimBase64Cevir = function() {
-  const file = document.getElementById('fotoFile').files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onloadend = function() {
-    document.getElementById('fotoBase64').value = reader.result;
-  }
-  reader.readAsDataURL(file);
+function kalanGunBul(bitisStr) {
+  if (!bitisStr) return null;
+  const bitis = new Date(bitisStr);
+  const bugun = new Date();
+  bugun.setHours(0,0,0,0);
+  bitis.setHours(0,0,0,0);
+  const diffTime = bitis - bugun;
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
-const select = document.getElementById('konum');
-if(select) {
-  billboardlar.forEach(b => { 
-    let opt = document.createElement("option");
-    opt.value = b; 
-    opt.textContent = b;
-    select.appendChild(opt);
-  });
-}
+// VİTRİN KATALOĞU GÖSTER
+window.kataloguGoster = function() {
+  const grid = document.getElementById('katalogGrid');
+  if (!grid) return;
+  grid.innerHTML = "";
 
-window.formuTemizle = function() {
-  document.getElementById('marka').value = "";
-  document.getElementById('afis').value = "";
-  document.getElementById('tel').value = "";
-  document.getElementById('ucret').value = "";
-  document.getElementById('bas').value = "";
-  document.getElementById('bit').value = "";
-  document.getElementById('mapsUrl').value = "";
-  document.getElementById('aciklama').value = "";
-  document.getElementById('fUrl').value = "";
-  document.getElementById('fotoBase64').value = "";
-  document.getElementById('typeAna').checked = true;
-  duzenlenenDbKey = null;
-}
+  const mainBoards = localVeriHafizasi.billboardlar || {};
+  const sabitBoards = localVeriHafizasi.sabitBillboardlar || {};
+  const aramaText = (document.getElementById('vitrinSearch')?.value || "").toLowerCase();
 
-function grafigiGuncelle(doluSayisi, bosSayisi) {
-  const ctx = document.getElementById('dolulukGrafigi');
-  if (!ctx) return;
+  billboardlar.forEach(bName => {
+    const bData = mainBoards[bName] || {};
+    const sabitData = sabitBoards[bName] || {};
+    const doluMu = !!(bData.marka || bData.afis);
 
-  const toplam = doluSayisi + bosSayisi;
-  const oran = toplam > 0 ? Math.round((doluSayisi / toplam) * 100) : 0;
-  document.getElementById('stat-oran').innerText = oran + '%';
+    if (gecerliVitrinFiltre === 'Boş' && doluMu) return;
+    if (gecerliVitrinFiltre === 'Dolu' && !doluMu) return;
 
-  if (myChart) myChart.destroy();
-
-  myChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Dolu', 'Boş'],
-      datasets: [{
-        data: [doluSayisi, bosSayisi],
-        backgroundColor: ['#ef4444', '#10b981'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '75%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
-      }
+    if (aramaText) {
+      const matchKonum = bName.toLowerCase().includes(aramaText);
+      const matchMarka = (bData.marka || "").toLowerCase().includes(aramaText);
+      const matchAfis = (bData.afis || "").toLowerCase().includes(aramaText);
+      if (!matchKonum && !matchMarka && !matchAfis) return;
     }
+
+    const card = document.createElement('div');
+    card.className = "white-card catalog-card overflow-hidden flex flex-col justify-between";
+    card.onclick = () => vitrinDetayAc(bName, bData, sabitData);
+
+    const fotoUrl = sabitData.foto || 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=800&q=80';
+    const panoTur = bData.tur || sabitData.tur || 'Billboard';
+
+    if (doluMu) {
+      card.innerHTML = `
+        <div>
+          <div class="relative h-48 bg-slate-100 overflow-hidden">
+            <img src="${fotoUrl}" loading="lazy" class="w-full h-full object-cover" alt="${bName}">
+            <div class="absolute top-3 left-3">
+              <span class="bg-blue-600 text-white font-bold text-[11px] px-2.5 py-1 rounded-full shadow-md">${panoTur}</span>
+            </div>
+            <div class="absolute top-3 right-3">
+              <span class="bg-rose-500 text-white font-bold text-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-white animate-ping"></span> Dolu
+              </span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <h3 class="font-bold text-base text-slate-900 group-hover:text-blue-600 transition flex items-center justify-between">
+              <span>${bName}</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+            </h3>
+            <div class="space-y-1">
+              <p class="text-xs font-semibold text-blue-600 mb-0 flex items-center gap-1.5">
+                <i class="fa-solid fa-building text-[11px]"></i> ${bData.marka || '-'}
+              </p>
+              <p class="text-xs text-slate-500 font-medium mb-0 flex items-center gap-1.5">
+                <i class="fa-solid fa-bullhorn text-[11px]"></i> ${bData.afis || '-'}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end text-xs font-medium text-slate-500">
+          <span class="text-blue-600 font-bold group-hover:underline">Detaylar & Location &rarr;</span>
+        </div>
+      `;
+    } else {
+      card.innerHTML = `
+        <div>
+          <div class="relative h-48 bg-slate-100 overflow-hidden">
+            <img src="${fotoUrl}" loading="lazy" class="w-full h-full object-cover" alt="${bName}">
+            <div class="absolute top-3 left-3">
+              <span class="bg-blue-600 text-white font-bold text-[11px] px-2.5 py-1 rounded-full shadow-md">${panoTur}</span>
+            </div>
+            <div class="absolute top-3 right-3">
+              <span class="bg-emerald-500 text-white font-bold text-xs px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
+                <i class="fa-solid fa-check text-xs"></i> Boş / Müsait
+              </span>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <h3 class="font-bold text-base text-slate-900 flex items-center justify-between">
+              <span>${bName}</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+            </h3>
+            <p class="text-xs text-slate-500 font-normal line-clamp-2">
+              ${sabitData.aciklama || 'Bu pano noktası şu anda boş durumdadır. Reklam kiralama detayları için tıklayın.'}
+            </p>
+          </div>
+        </div>
+        <div class="px-4 py-3 bg-emerald-50/50 border-t border-emerald-100 flex items-center justify-end text-xs font-bold text-emerald-700">
+          <span>Harita & Bilgi &rarr;</span>
+        </div>
+      `;
+    }
+
+    grid.appendChild(card);
   });
 }
 
-onValue(ref(db, 'billboardlar'), (snapshot) => {
-  const data = snapshot.val();
-  localVeriHafizasi = data ? data : {};
-  try {
-    localStorage.setItem('sapanca_billboard_cache', JSON.stringify(localVeriHafizasi));
-  } catch(e) {}
-  kataloguGoster();
-  if (!document.getElementById('yonetimPaneliSayfasi').classList.contains('hidden')) {
-    tabloyuGoster(gecerliFiltre);
-  }
-});
-
-window.vitrinTabDegistir = function(f) {
-  gecerliVitrinFiltre = f;
-  ['Hepsi', 'Bos', 'Dolu'].forEach(k => {
-    document.getElementById(`vitrinFiltre-${k}`)?.classList.remove('active');
-  });
-  document.getElementById(`vitrinFiltre-${f}`)?.classList.add('active');
+window.vitrinTabDegistir = function(filtre) {
+  gecerliVitrinFiltre = filtre;
+  document.querySelectorAll('[id^="vitrinFiltre-"]').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`vitrinFiltre-${filtre}`)?.classList.add('active');
   kataloguGoster();
 }
 
@@ -768,423 +1334,280 @@ window.vitrinFiltrele = function() {
   kataloguGoster();
 }
 
-function kataloguGoster() {
-  const grid = document.getElementById('katalogGrid');
-  if (!grid) return;
-  grid.innerHTML = "";
-
-  const searchQ = document.getElementById('vitrinSearch')?.value.toLowerCase().trim() || "";
-
-  billboardlar.forEach(b => {
-    const vAna = localVeriHafizasi[b];
-    const infoAna = vAna ? buguneGoreDurumHesapla(vAna.bas, vAna.bit) : { durum: 'bos', gun: 0 };
-    const isDolu = (vAna && vAna.m && infoAna.durum === 'aktif');
-
-    let gosterilsin = false;
-    if (gecerliVitrinFiltre === 'Hepsi') gosterilsin = true;
-    else if (gecerliVitrinFiltre === 'Dolu' && isDolu) gosterilsin = true;
-    else if (gecerliVitrinFiltre === 'Boş' && !isDolu) gosterilsin = true;
-
-    if (searchQ !== "") {
-      const markaMatch = vAna?.m ? vAna.m.toLowerCase().includes(searchQ) : false;
-      const afisMatch = vAna?.a ? vAna.a.toLowerCase().includes(searchQ) : false;
-      const konumMatch = b.toLowerCase().includes(searchQ);
-      if (!markaMatch && !afisMatch && !konumMatch) gosterilsin = false;
-    }
-
-    if (gosterilsin) {
-      let statusBadge = isDolu ? 
-        `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500 text-white shadow-sm">🔴 Dolu</span>` : 
-        `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-sm">🟢 Boş / Müsait</span>`;
-
-      let imgUrl = vAna?.fUrl || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
-
-      let card = document.createElement('div');
-      card.className = "white-card catalog-card overflow-hidden flex flex-col justify-between";
-      card.onclick = () => vitrinDetayAc(b);
-
-      card.innerHTML = `
-        <div>
-          <div class="relative h-48 bg-slate-100 overflow-hidden">
-            <img src="${imgUrl}" class="w-full h-full object-cover" alt="${b}">
-            <div class="absolute top-3 right-3">${statusBadge}</div>
-          </div>
-          <div class="p-4 space-y-2">
-            <h3 class="font-extrabold text-base text-slate-900">${b}</h3>
-            ${isDolu ? `
-              <div class="text-xs text-slate-600 space-y-1.5 pt-1">
-                <div><span class="text-slate-400">Aktif Afiş:</span> <strong>${vAna.a || '-'}</strong></div>
-              </div>
-            ` : `
-              <p class="text-xs text-slate-500 mb-0">Bu reklam alanı şu an boş ve kiralama için müsaittir.</p>
-            `}
-          </div>
-        </div>
-        <div class="p-3 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs font-bold text-blue-600">
-          <span>Detayları Görmek İçin Tıklayın</span>
-          <i class="fa-solid fa-arrow-right"></i>
-        </div>
-      `;
-      grid.appendChild(card);
-    }
-  });
-}
-
-window.vitrinDetayAc = function(konum) {
-  const vAna = localVeriHafizasi[konum];
-  const infoAna = vAna ? buguneGoreDurumHesapla(vAna.bas, vAna.bit) : { durum: 'bos', gun: 0 };
-  const isDolu = (vAna && vAna.m && infoAna.durum === 'aktif');
-
-  document.getElementById('vitrinModalKonum').innerText = konum;
-  document.getElementById('vitrinModalAfis').innerText = isDolu ? `Aktif Reklam: ${vAna.a || '-'}` : "Bu Billboard Müsait";
+window.vitrinDetayAc = function(konumAdi, data, sabitData) {
+  const modal = new bootstrap.Modal(document.getElementById('vitrinDetayModal'));
   
-  const imgElement = document.getElementById('vitrinModalImg');
-  imgElement.src = vAna?.fUrl || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+  document.getElementById('vitrinModalKonum').innerText = konumAdi;
+  document.getElementById('vitrinModalAfis').innerText = data.afis ? `${data.marka || ''} - ${data.afis}` : 'Boş / Müsait Reklam Alanı';
+  
+  const imgEl = document.getElementById('vitrinModalImg');
+  imgEl.src = sabitData.foto || 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=800&q=80';
 
-  const badgeBox = document.getElementById('vitrinModalBadge');
-  badgeBox.innerHTML = isDolu ? 
-    `<span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-white shadow">🔴 Dolu</span>` : 
-    `<span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white shadow">🟢 Boş / Kiralamaya Uygun</span>`;
+  const badgeEl = document.getElementById('vitrinModalBadge');
+  const doluMu = !!(data.marka || data.afis);
+  const panoTur = data.tur || sabitData.tur || 'Billboard';
 
-  const tarihBox = document.getElementById('vitrinModalTarihBox');
-  const tarihTxt = document.getElementById('vitrinModalTarihTxt');
-  if (isDolu && vAna.bit) {
-    tarihTxt.innerHTML = `${tarihFormatlaMetin(vAna.bit)} <span class="text-rose-600 font-bold border-l pl-2 ms-2 border-amber-300">(${infoAna.gun} Gün Kaldı)</span>`;
-    tarihBox.classList.remove('hidden');
+  let htmlBadge = `<span class="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">${panoTur}</span>`;
+
+  if (doluMu) {
+    htmlBadge += `<span class="bg-rose-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-full shadow-lg">🔴 Dolu Reklam Alanı</span>`;
   } else {
-    tarihBox.classList.add('hidden');
+    htmlBadge += `<span class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-full shadow-lg">🟢 Boş & Kiralamaya Hazır</span>`;
   }
-
-  const mapsBtn = document.getElementById('vitrinModalMaps');
-  mapsBtn.href = vAna?.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Sapanca " + konum)}`;
+  badgeEl.innerHTML = htmlBadge;
 
   const aciklamaBox = document.getElementById('vitrinModalAciklamaBox');
-  const aciklamaTxt = document.getElementById('vitrinModalAciklama');
-  
-  if (vAna && vAna.aciklama && vAna.aciklama.trim() !== "") {
-    aciklamaTxt.innerText = vAna.aciklama;
+  if (sabitData.aciklama) {
+    document.getElementById('vitrinModalAciklama').innerText = sabitData.aciklama;
     aciklamaBox.classList.remove('hidden');
   } else {
     aciklamaBox.classList.add('hidden');
   }
 
-  const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('vitrinDetayModal'));
+  const mapsBtn = document.getElementById('vitrinModalMaps');
+  if (sabitData.mapsUrl) {
+    mapsBtn.href = sabitData.mapsUrl;
+    mapsBtn.classList.remove('hidden');
+  } else {
+    mapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Sapanca " + konumAdi)}`;
+    mapsBtn.classList.remove('hidden');
+  }
+
   modal.show();
 }
 
-window.kaydet = async function() {
-  let anaKonum = document.getElementById('konum').value;
-  if(!anaKonum) return alert("Lütfen konum seçin!");
+// YÖNETİM PANELİ TABLO İŞLEMLERİ
+window.tabloyuGoster = function(filtre) {
+  gecerliFiltre = filtre;
+  
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`btn-${filtre}`)?.classList.add('active');
 
-  let hedefKey = anaKonum;
+  const filtreEtiketi = document.getElementById('filtreEtiketi');
+  if (filtreEtiketi) filtreEtiketi.innerText = filtre === 'Hepsi' ? 'Tüm Liste' : filtre;
 
-  if (duzenlenenDbKey) {
-    hedefKey = duzenlenenDbKey;
-  } else {
-    const kayitTuru = document.querySelector('input[name="kayitTuru"]:checked').value;
-    if (kayitTuru === "ust") {
-      hedefKey = `${anaKonum} (Üst Afiş)`;
-    } else if (kayitTuru === "sira") {
-      let siraNo = 1;
-      while(localVeriHafizasi[`${anaKonum} (Sırada ${siraNo})`]) {
-        siraNo++;
-      }
-      hedefKey = `${anaKonum} (Sırada ${siraNo})`;
+  const tbody = document.getElementById('tabloGövdesi');
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  const mainBoards = localVeriHafizasi.billboardlar || {};
+  const sabitBoards = localVeriHafizasi.sabitBillboardlar || {};
+  const searchTxt = (document.getElementById('searchInput')?.value || "").toLowerCase();
+
+  billboardlar.forEach(bName => {
+    const bData = mainBoards[bName] || {};
+    const sabitData = sabitBoards[bName] || {};
+    const doluMu = !!(bData.marka || bData.afis);
+    const kalan = kalanGunBul(bData.bit);
+    const panoTur = bData.tur || sabitData.tur || 'Billboard';
+
+    let durumKategori = doluMu ? 'Dolu' : 'Boş';
+
+    if (filtre !== 'Hepsi' && filtre !== durumKategori) return;
+
+    if (searchTxt) {
+      const matchKonum = bName.toLowerCase().includes(searchTxt);
+      const matchMarka = (bData.marka || "").toLowerCase().includes(searchTxt);
+      const matchAfis = (bData.afis || "").toLowerCase().includes(searchTxt);
+      const matchTel = (bData.tel || "").toLowerCase().includes(searchTxt);
+      if (!matchKonum && !matchMarka && !matchAfis && !matchTel) return;
     }
-  }
 
-  let indirmeUrl = document.getElementById('fotoBase64').value || document.getElementById('fUrl').value || localVeriHafizasi[hedefKey]?.fUrl || "";
+    const tr = document.createElement('tr');
+    tr.className = "table-row-item border-b border-slate-100";
 
-  const veri = {
-    m: document.getElementById('marka').value,
-    a: document.getElementById('afis').value,
-    fUrl: indirmeUrl,
-    mapsUrl: document.getElementById('mapsUrl').value,
-    aciklama: document.getElementById('aciklama').value,
-    t: document.getElementById('tel').value,
-    u: document.getElementById('ucret').value,
-    bas: document.getElementById('bas').value,
-    bit: document.getElementById('bit').value
-  };
+    let durumBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">🟢 Boş</span>`;
+    if (doluMu) {
+      durumBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold">🔴 Dolu</span>`;
+    }
 
-  set(ref(db, 'billboardlar/' + hedefKey), veri)
-    .then(() => {
-      alert("Kayıt Başarılı!");
-      bootstrap.Modal.getInstance(document.getElementById('kayitModal'))?.hide();
-      formuTemizle();
-    }).catch(err => alert("Hata: " + err.message));
+    let kalanTxt = "-";
+    if (bData.bit) {
+      if (kalan > 0) kalanTxt = `<strong class="text-amber-600 font-bold">${kalan} Gün</strong> (${tarihFormatla(bData.bit)})`;
+      else if (kalan === 0) kalanTxt = `<strong class="text-rose-600 font-bold">Bugün Bitiyor</strong>`;
+    }
+
+    let gosterilecekUcret = bData.ucret ? Number(bData.ucret).toLocaleString('tr-TR') + ' TL' : '-';
+
+    tr.innerHTML = `
+      <td class="py-3.5 px-6 font-bold text-slate-900">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+          <span>${bName}</span>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200">${panoTur}</span>
+        </div>
+      </td>
+      <td class="py-3.5 px-6 font-medium text-slate-700">
+        <div>${bData.marka || '-'}</div>
+        <div class="text-xs text-slate-400 font-normal">${bData.tel || ''}</div>
+      </td>
+      <td class="py-3.5 px-6 text-slate-600 font-medium">${bData.afis || '-'}</td>
+      <td class="py-3.5 px-6 text-xs text-slate-600">${kalanTxt}</td>
+      <td class="py-3.5 px-6 font-bold text-blue-600">${gosterilecekUcret}</td>
+      <td class="py-3.5 px-6">${durumBadge}</td>
+      <td class="py-3.5 px-6 text-right space-x-1">
+        <button onclick="duzenleAnaModal('${bName}')" class="btn btn-sm btn-light border-slate-200 text-slate-700 font-bold text-xs rounded-lg px-2.5 py-1">
+          <i class="fa-solid fa-pen-to-square"></i> Düzenle
+        </button>
+        <button onclick="silAnaRecord('${bName}')" class="btn btn-sm btn-light border-slate-200 text-rose-600 font-bold text-xs rounded-lg px-2.5 py-1">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
-window.billboardBosalt = function(dbKey) {
-  if(confirm(`"${dbKey}" kaydını silmek istediğinize emin misiniz?`)) {
-    remove(ref(db, 'billboardlar/' + dbKey))
-      .then(() => { 
-        alert("Kayıt silindi."); 
-        bootstrap.Modal.getInstance(document.getElementById('bilgiKartalModal'))?.hide();
-      })
-      .catch(err => alert("Hata: " + err.message));
+// GEÇMİŞ İŞLEMLER TABLOSU (ARAMA FİLTRESİ ENTEGRE EDİLDİ)
+window.gecmisTablosunuGoster = function() {
+  const tbody = document.getElementById('gecmisTabloGövdesi');
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  const gecmisVeriler = localVeriHafizasi.gecmisIslemler || {};
+  const searchTxt = (document.getElementById('gecmisSearchInput')?.value || "").toLowerCase().trim();
+  const keys = Object.keys(gecmisVeriler).reverse();
+
+  let eklenenKayitSayisi = 0;
+
+  keys.forEach(k => {
+    const item = gecmisVeriler[k];
+    
+    // Arama Kelimesi Filtreleme Kontrolü
+    if (searchTxt) {
+      const matchKonum = (item.konum || "").toLowerCase().includes(searchTxt);
+      const matchTur = (item.tur || "").toLowerCase().includes(searchTxt);
+      const matchMarka = (item.marka || "").toLowerCase().includes(searchTxt);
+      const matchAfis = (item.afis || "").toLowerCase().includes(searchTxt);
+      if (!matchKonum && !matchTur && !matchMarka && !matchAfis) return;
+    }
+
+    eklenenKayitSayisi++;
+    const tr = document.createElement('tr');
+    tr.className = "border-b border-slate-100 hover:bg-slate-50/50";
+    tr.innerHTML = `
+      <td class="py-3.5 px-6 font-bold text-slate-900">
+        <span>${item.konum || '-'}</span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 ms-1 hover:bg-slate-200">${item.tur || 'Billboard'}</span>
+      </td>
+      <td class="py-3.5 px-6 text-slate-700">${item.marka || '-'}</td>
+      <td class="py-3.5 px-6 text-slate-600">${item.afis || '-'}</td>
+      <td class="py-3.5 px-6 text-xs text-slate-500">${tarihFormatla(item.bas)} - ${tarihFormatla(item.bit)}</td>
+      <td class="py-3.5 px-6 font-bold text-slate-800">${item.ucret ? Number(item.ucret).toLocaleString('tr-TR') + ' TL' : '-'}</td>
+      <td class="py-3.5 px-6 text-right">
+        <button onclick="gecmisTekSil('${k}')" class="btn btn-sm btn-light text-rose-600 border-slate-200 text-xs font-bold rounded-lg px-2.5 py-1">
+          <i class="fa-solid fa-trash"></i> Sil
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  if (eklenenKayitSayisi === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 font-medium text-xs">${searchTxt ? 'Aradığınız kriterlere uygun geçmiş kayıt bulunamadı.' : 'Henüz geçmiş işlem kaydı bulunmuyor.'}</td></tr>`;
   }
 }
 
-window.bilgiKartiniAc = function(anaKonum, hedefTab = 'tab-ana-btn') {
-  document.getElementById('infoCardKonum').innerText = anaKonum;
-
-  const vAna = localVeriHafizasi[anaKonum];
-  const mapsBtn = document.getElementById('infoCardMapsBtn');
-  if (vAna && vAna.mapsUrl) {
-    mapsBtn.href = vAna.mapsUrl;
-    mapsBtn.classList.remove('hidden');
-  } else {
-    mapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Sapanca " + anaKonum)}`;
-    mapsBtn.classList.remove('hidden');
+window.gecmisTekSil = function(key) {
+  if(confirm("Bu geçmiş kaydı kalıcı olarak silmek istediğinize emin misiniz?")) {
+    remove(ref(db, 'gecmisIslemler/' + key));
   }
-
-  const infoAna = vAna ? buguneGoreDurumHesapla(vAna.bas, vAna.bit) : { durum: 'bos', gun: 0 };
-
-  const anaContainer = document.getElementById('anaAfisIcerik');
-  if (vAna && vAna.m) {
-    anaContainer.innerHTML = htmlOlusturAfisKarti(anaKonum, vAna, infoAna, "📌 Ana Reklam");
-  } else {
-    anaContainer.innerHTML = `<div class="p-4 text-center text-slate-500 font-medium bg-slate-50 rounded-xl border border-slate-200">
-      Bu konumda aktif ana kiralama bulunmuyor.
-      <br><button class="btn btn-sm btn-primary mt-2 rounded-lg" onclick="duzenleFormunuAc('${anaKonum}')">+ Ana Reklam Ekle</button>
-    </div>`;
-  }
-
-  const ustKeys = Object.keys(localVeriHafizasi).filter(k => k.startsWith(anaKonum) && k.includes("(Üst Afiş)"));
-  document.getElementById('count-ust').innerText = ustKeys.length;
-  const ustContainer = document.getElementById('ustAfislerListesi');
-  if (ustKeys.length > 0) {
-    ustContainer.innerHTML = ustKeys.map(k => {
-      let v = localVeriHafizasi[k];
-      let info = buguneGoreDurumHesapla(v.bas, v.bit);
-      return htmlOlusturAfisKarti(k, v, info, "⚡ Üst Katman Afişi");
-    }).join("");
-  } else {
-    ustContainer.innerHTML = `<div class="p-4 text-center text-slate-500 font-medium bg-slate-50 rounded-xl border border-slate-200">
-      Üst afiş / yama reklamı bulunmuyor.
-    </div>`;
-  }
-
-  const siraKeys = Object.keys(localVeriHafizasi).filter(k => k.startsWith(anaKonum) && k.includes("(Sırada"));
-  document.getElementById('count-siradaki').innerText = siraKeys.length;
-  const siradakiContainer = document.getElementById('siradakiAfislerListesi');
-  if (siraKeys.length > 0) {
-    siradakiContainer.innerHTML = siraKeys.map((k, index) => {
-      let v = localVeriHafizasi[k];
-      let info = buguneGoreDurumHesapla(v.bas, v.bit);
-      return htmlOlusturAfisKarti(k, v, info, `⏳ Sırada ${index + 1}. Reklam`);
-    }).join("");
-  } else {
-    siradakiContainer.innerHTML = `<div class="p-4 text-center text-slate-500 font-medium bg-slate-50 rounded-xl border border-slate-200">
-      Sırada bekleyen rezervasyon bulunmuyor.
-    </div>`;
-  }
-
-  const tabBtn = document.getElementById(hedefTab);
-  if(tabBtn) {
-    const bsTab = new bootstrap.Tab(tabBtn);
-    bsTab.show();
-  }
-
-  const infoModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('bilgiKartalModal'));
-  infoModal.show();
 }
 
-function htmlOlusturAfisKarti(dbKey, v, info, etiket) {
-  let gunMetni = info.durum === 'bitti' ? 'Süre Doldu' : (info.durum === 'baslamadi' ? `${info.gun} Gün Var` : `${info.gun} Gün Kaldı`);
-  let imgHtml = v.fUrl ? `<div class="mb-3 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 max-h-48 flex items-center justify-center">
-    <img src="${v.fUrl}" class="w-full h-full object-cover max-h-48" alt="Billboard Görseli">
-  </div>` : '';
-
-  return `
-    <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2 shadow-sm">
-      ${imgHtml}
-      <div class="flex items-center justify-between border-b pb-2 border-slate-100">
-        <span class="text-xs font-bold uppercase px-2.5 py-1 rounded-md bg-blue-50 text-blue-700">${etiket}</span>
-        <span class="text-xs font-bold text-slate-600">${gunMetni}</span>
-      </div>
-      <div class="grid grid-cols-2 gap-2 text-sm pt-1">
-        <div><span class="text-slate-400">Marka:</span> <strong>${v.m || '-'}</strong></div>
-        <div><span class="text-slate-400">Afiş:</span> <strong>${v.a || '-'}</strong></div>
-        <div><span class="text-slate-400">Telefon:</span> <strong>${v.t || '-'}</strong></div>
-        <div><span class="text-slate-400">Ücret:</span> <strong class="text-emerald-600">${v.u ? v.u + ' TL' : '-'}</strong></div>
-        <div><span class="text-slate-400">Başlangıç:</span> <span class="font-semibold text-slate-700">${tarihFormatla(v.bas)}</span></div>
-        <div><span class="text-slate-400">Bitiş:</span> <span class="font-semibold text-slate-700">${tarihFormatla(v.bit)}</span></div>
-      </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button class="btn btn-sm btn-light text-xs font-semibold border" onclick="duzenleFormunuAc('${dbKey}')"><i class="fa-solid fa-pen me-1"></i>Düzenle</button>
-        <button class="btn btn-sm btn-outline-danger text-xs font-semibold" onclick="billboardBosalt('${dbKey}')"><i class="fa-solid fa-trash me-1"></i>Sil</button>
-      </div>
-    </div>
-  `;
-}
-
-window.duzenleFormunuAc = function(dbKey) {
-  bootstrap.Modal.getInstance(document.getElementById('bilgiKartalModal'))?.hide();
-  formuTemizle();
-  duzenlenenDbKey = dbKey;
-
-  let anaKonum = dbKey.replace(" (Üst Afiş)", "").replace(/ \(Sırada \d+\)/, "");
-  document.getElementById('konum').value = anaKonum;
-
-  const v = localVeriHafizasi[dbKey];
-  if(v) {
-    document.getElementById('marka').value = v.m || "";
-    document.getElementById('afis').value = v.a || "";
-    document.getElementById('tel').value = v.t || "";
-    document.getElementById('ucret').value = v.u || "";
-    document.getElementById('bas').value = v.bas || "";
-    document.getElementById('bit').value = v.bit || "";
-    document.getElementById('mapsUrl').value = v.mapsUrl || "";
-    document.getElementById('aciklama').value = v.aciklama || "";
-    document.getElementById('fUrl').value = v.fUrl || "";
+window.gecmisiTemizle = function() {
+  if(confirm("Tüm geçmiş kayıtları kalıcı olarak silmek istediğinize emin misiniz?")) {
+    remove(ref(db, 'gecmisIslemler'));
   }
-
-  const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('kayitModal'));
-  modal.show();
-}
-
-function buguneGoreDurumHesapla(baslangicTarihi, bitisTarihi) {
-  if (!baslangicTarihi || !bitisTarihi) return { durum: 'belirsiz', gun: 0 };
-  const simdi = new Date();
-  const bugunUTC = Date.UTC(simdi.getFullYear(), simdi.getMonth(), simdi.getDate());
-  const pBas = baslangicTarihi.split('-');
-  const basUTC = Date.UTC(parseInt(pBas[0], 10), parseInt(pBas[1], 10) - 1, parseInt(pBas[2], 10));
-  const pBit = bitisTarihi.split('-');
-  const bitUTC = Date.UTC(parseInt(pBit[0], 10), parseInt(pBit[1], 10) - 1, parseInt(pBit[2], 10));
-  if (bugunUTC < basUTC) return { durum: 'baslamadi', gun: Math.floor((basUTC - bugunUTC) / (1000 * 60 * 60 * 24)) };
-  else if (bugunUTC >= basUTC && bugunUTC <= bitUTC) return { durum: 'aktif', gun: Math.floor((bitUTC - bugunUTC) / (1000 * 60 * 60 * 24)) };
-  else return { durum: 'bitti', gun: 0 };
 }
 
 window.filtreleVeAra = function() {
   tabloyuGoster(gecerliFiltre);
 }
 
-window.tabloyuGoster = function(filtre) {
-  if(filtre) gecerliFiltre = filtre;
-  
-  ['Hepsi', 'Dolu', 'Boş', 'Bekleyen', 'Bitenler'].forEach(f => {
-    document.getElementById(`btn-${f}`)?.classList.remove('active');
-  });
-  document.getElementById(`btn-${gecerliFiltre}`)?.classList.add('active');
+// Düzenle
+window.duzenleAnaModal = function(bName) {
+  const bData = (localVeriHafizasi.billboardlar || {})[bName] || {};
+  const sabitData = (localVeriHafizasi.sabitBillboardlar || {})[bName] || {};
 
-  const searchQuery = document.getElementById('searchInput')?.value.toLowerCase().trim() || "";
-  const tbody = document.getElementById('tabloGövdesi');
-  if(!tbody) return;
-  tbody.innerHTML = "";
+  document.getElementById('konum').value = bName;
+  document.getElementById('panoTuru').value = bData.tur || sabitData.tur || "Billboard";
+  document.getElementById('marka').value = bData.marka || "";
+  document.getElementById('afis').value = bData.afis || "";
+  document.getElementById('tel').value = bData.tel || "";
+  document.getElementById('bas').value = bData.bas || "";
+  document.getElementById('bit').value = bData.bit || "";
 
-  let dCount = 0;
-  let bSayisi = billboardlar.length;
-  let bitenCount = 0;
-  let bekleyenCount = 0;
+  otomatikFiyatHesapla();
 
-  billboardlar.forEach(b => {
-    let vAna = localVeriHafizasi[b];
-    let infoAna = vAna ? buguneGoreDurumHesapla(vAna.bas, vAna.bit) : { durum: 'bos', gun: 0 };
-    
-    const ustKeys = Object.keys(localVeriHafizasi).filter(k => k.startsWith(b) && k.includes("(Üst Afiş)"));
-    const siraKeys = Object.keys(localVeriHafizasi).filter(k => k.startsWith(b) && k.includes("(Sırada"));
+  const modal = new bootstrap.Modal(document.getElementById('kayitModal'));
+  modal.show();
+}
 
-    let isDolu = (vAna && vAna.m && infoAna.durum === 'aktif');
-    if (isDolu) dCount++;
-
-    if (infoAna.durum === 'bitti') bitenCount++;
-    if (siraKeys.length > 0) bekleyenCount += siraKeys.length;
-
-    let satirGosterilsinMi = false;
-    if (gecerliFiltre === 'Hepsi') satirGosterilsinMi = true;
-    else if (gecerliFiltre === 'Dolu' && isDolu) satirGosterilsinMi = true;
-    else if (gecerliFiltre === 'Boş' && !isDolu) satirGosterilsinMi = true;
-    else if (gecerliFiltre === 'Bekleyen' && siraKeys.length > 0) satirGosterilsinMi = true;
-    else if (gecerliFiltre === 'Bitenler' && infoAna.durum === 'bitti') satirGosterilsinMi = true;
-
-    if (searchQuery !== "") {
-      const markaMatch = vAna?.m ? vAna.m.toLowerCase().includes(searchQuery) : false;
-      const afisMatch = vAna?.a ? vAna.a.toLowerCase().includes(searchQuery) : false;
-      const telMatch = vAna?.t ? vAna.t.toLowerCase().includes(searchQuery) : false;
-      const konumMatch = b.toLowerCase().includes(searchQuery);
-      if (!markaMatch && !afisMatch && !konumMatch && !telMatch) {
-        satirGosterilsinMi = false;
-      }
+window.silAnaRecord = function(bName) {
+  const bData = (localVeriHafizasi.billboardlar || {})[bName];
+  if (confirm(`${bName} konumundaki reklam kiralamasını silmek istediğinize emin misiniz? (Geçmişe aktarılacaktır)`)) {
+    if (bData && (bData.marka || bData.afis)) {
+      push(ref(db, 'gecmisIslemler'), {
+        ...bData,
+        silinmeTarihi: Date.now()
+      });
     }
+    remove(ref(db, 'billboardlar/' + bName));
+  }
+}
 
-    if (satirGosterilsinMi) {
-      let subBadgesHtml = "";
-      if(ustKeys.length > 0) {
-        subBadgesHtml += `<button onclick="bilgiKartiniAc('${b}', 'tab-ust-btn')" class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded-md hover:bg-emerald-200 me-1">⚡ ${ustKeys.length} Üst Afiş</button>`;
-      }
-      if(siraKeys.length > 0) {
-        subBadgesHtml += `<button onclick="bilgiKartiniAc('${b}', 'tab-siradaki-btn')" class="inline-flex items-center gap-1 bg-purple-100 text-purple-800 text-[11px] font-bold px-2 py-0.5 rounded-md hover:bg-purple-200">⏳ ${siraKeys.length} Sırada</button>`;
-      }
+// İstatistiki Bilgiler
+function istatistikleriGuncelle() {
+  const mainBoards = localVeriHafizasi.billboardlar || {};
+  let doluSayisi = 0;
+  let bosSayisi = 0;
 
-      let kalanGunMetni = "-";
-      if (vAna && vAna.m) {
-        if (infoAna.durum === 'bitti') {
-          kalanGunMetni = `<span class="inline-flex items-center gap-1 font-semibold text-amber-700 bg-amber-50 px-2 py-1 rounded text-xs"><i class="fa-solid fa-hourglass-end"></i> Süre Doldu</span>`;
-        } else {
-          kalanGunMetni = `<div><span class="inline-flex items-center gap-1 font-semibold ${infoAna.gun < 15 ? 'text-rose-700 bg-rose-50' : 'text-emerald-700 bg-emerald-50'} px-2 py-1 rounded text-xs">${infoAna.gun} Gün Kaldı</span></div><div class="text-[11px] text-slate-500 font-medium mt-0.5">${tarihFormatlaMetin(vAna.bit)}</div>`;
-        }
-      }
-
-      let durumBadge = isDolu ? 
-        `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">Dolu</span>` : 
-        `<span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Boş</span>`;
-
-      let mapsLinkUrl = vAna?.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Sapanca " + b)}`;
-
-      let tr = document.createElement('tr');
-      tr.className = "table-row-item";
-      tr.innerHTML = `
-        <td class="py-3.5 px-6">
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-slate-800 hover:text-blue-600 transition cursor-pointer" onclick="bilgiKartiniAc('${b}', 'tab-ana-btn')">${b}</span>
-            <a href="${mapsLinkUrl}" target="_blank" title="Google Maps'te Aç" class="text-red-500 hover:text-red-700 text-xs">
-              <i class="fa-solid fa-map-location-dot"></i>
-            </a>
-          </div>
-          ${subBadgesHtml ? `<div class="mt-1">${subBadgesHtml}</div>` : ''}
-        </td>
-        <td class="py-3.5 px-6">
-          <div class="font-semibold text-slate-900">${vAna?.m || '-'}</div>
-          <div class="text-xs text-slate-500 font-mono">${vAna?.t || ''}</div>
-        </td>
-        <td class="py-3.5 px-6 font-medium text-slate-700">${vAna?.a || '-'}</td>
-        <td class="py-3.5 px-6">${kalanGunMetni}</td>
-        <td class="py-3.5 px-6 font-bold text-slate-800">${vAna?.u ? vAna.u + ' TL' : '-'}</td>
-        <td class="py-3.5 px-6">${durumBadge}</td>
-        <td class="py-3.5 px-6 text-right">
-          <div class="flex items-center justify-end gap-1.5">
-            <button class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700" onclick="bilgiKartiniAc('${b}', 'tab-ana-btn')" title="Detay / Görsel">
-              <i class="fa-solid fa-layer-group"></i>
-            </button>
-            <button class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100" onclick="billboardBosalt('${b}')" title="Sil">
-              Sil
-            </button>
-          </div>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    }
+  billboardlar.forEach(bName => {
+    const bData = mainBoards[bName] || {};
+    const doluMu = !!(bData.marka || bData.afis);
+    if (doluMu) doluSayisi++;
+    else bosSayisi++;
   });
 
-  document.getElementById('badge-hepsi').innerText = bSayisi;
-  document.getElementById('badge-dolu').innerText = dCount;
-  document.getElementById('badge-bos').innerText = (bSayisi - dCount);
-  document.getElementById('badge-bekleyen').innerText = bekleyenCount;
-  document.getElementById('badge-bitenler').innerText = bitenCount;
+  const toplam = billboardlar.length;
+  const oran = Math.round((doluSayisi / toplam) * 100);
 
-  document.getElementById('stat-toplam').innerText = bSayisi;
-  document.getElementById('stat-dolu').innerText = dCount;
-  document.getElementById('stat-bos').innerText = (bSayisi - dCount);
+  if (document.getElementById('stat-toplam')) document.getElementById('stat-toplam').innerText = toplam;
+  if (document.getElementById('stat-dolu')) document.getElementById('stat-dolu').innerText = doluSayisi;
+  if (document.getElementById('stat-bos')) document.getElementById('stat-bos').innerText = bosSayisi;
+  if (document.getElementById('stat-oran')) document.getElementById('stat-oran').innerText = `%${oran}`;
 
-  grafigiGuncelle(dCount, (bSayisi - dCount));
+  if (document.getElementById('badge-hepsi')) document.getElementById('badge-hepsi').innerText = toplam;
+  if (document.getElementById('badge-dolu')) document.getElementById('badge-dolu').innerText = doluSayisi;
+  if (document.getElementById('badge-bos')) document.getElementById('badge-bos').innerText = bosSayisi;
+
+  const ctx = document.getElementById('dolulukGrafigi')?.getContext('2d');
+  if (ctx) {
+    if (myChart) myChart.destroy();
+    myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Dolu', 'Boş'],
+        datasets: [{
+          data: [doluSayisi, bosSayisi],
+          backgroundColor: ['#e11d48', '#10b981'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        cutout: '75%'
+      }
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   kataloguGoster();
 });
+
 </script>
 </body>
 </html>
