@@ -37,8 +37,10 @@
   }
 </script>
 
-<!-- Chart.js -->
+<!-- Chart.js & jsPDF PDF Motorları -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
 <style>
   body {
@@ -126,7 +128,6 @@
 
   .catalog-card {
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
   }
   .catalog-card:hover {
     transform: translateY(-5px);
@@ -153,7 +154,6 @@
     </div>
   </header>
 
-  <!-- Hero Banner Section -->
   <section class="bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
     <div class="max-w-3xl mx-auto relative z-10 space-y-3">
       <span id="heroBadge" class="inline-block px-3.5 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-semibold text-blue-200 border border-white/15">Sapanca Açık Hava Reklam Alanları</span>
@@ -191,7 +191,6 @@
 <!-- SECTION 2: YÖNETİM PANELİ -->
 <div id="yonetimPaneliSayfasi" class="flex-1 flex flex-col md:flex-row hidden min-h-screen">
   
-  <!-- SOL SİDEBAR MENÜ -->
   <aside class="w-full md:w-64 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0">
     <div class="space-y-6">
       <div class="flex items-center gap-3 px-2 py-1">
@@ -218,9 +217,13 @@
           <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
           <span>Geçmiş İşlemler</span>
         </div>
+        <div data-bs-toggle="modal" data-bs-target="#veriIndirModal" class="sidebar-link text-blue-700 bg-blue-50/50">
+          <i class="fa-solid fa-file-pdf w-5 text-center text-blue-600"></i>
+          <span>PDF Veri / Rapor İndir</span>
+        </div>
         <div data-bs-toggle="modal" data-bs-target="#sabitBillboardModal" onclick="sabitFormuTemizle()" class="sidebar-link">
           <i class="fa-solid fa-map-pin w-5 text-center text-amber-600"></i>
-          <span>Pano Tanımla (Sabit)</span>
+          <span>Pano Tanımla & Şablon</span>
         </div>
         <div data-bs-toggle="modal" data-bs-target="#ayarlarModal" class="sidebar-link">
           <i class="fa-solid fa-sliders w-5 text-center"></i>
@@ -243,10 +246,8 @@
     </div>
   </aside>
 
-  <!-- SAĞ İÇERİK ALANI -->
   <main class="flex-1 p-4 sm:p-8 space-y-6 overflow-y-auto">
     
-    <!-- EKRAN 1: GENEL YÖNETİM -->
     <div id="adminEkran-dashboard" class="space-y-6">
       <div class="white-card p-4 sm:p-5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
         <div class="relative flex-1 min-w-[260px]">
@@ -276,7 +277,6 @@
         </div>
       </div>
 
-      <!-- Metrik Kartları -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="white-card p-5 flex items-center justify-between">
           <div>
@@ -323,7 +323,6 @@
         </div>
       </div>
 
-      <!-- Tablo Container -->
       <div class="white-card overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-200 bg-white flex items-center justify-between">
           <div class="flex items-center gap-3">
@@ -351,7 +350,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 2: ANALİZ VE KİRALAMA RAPORLARI -->
+    <!-- ANALİZ BÖLÜMÜ (3 ÖZET KART) -->
     <div id="adminEkran-analiz" class="space-y-6 hidden">
       <div class="white-card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -359,7 +358,6 @@
           <p class="text-xs text-slate-500 mb-0">Lokasyonların performans verileri ve süresi dolmuş kiralama analizleri.</p>
         </div>
         
-        <!-- ZAMAN ARALIĞI FİLTRESİ -->
         <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 p-1.5 rounded-xl">
           <i class="fa-solid fa-calendar-days text-slate-400 text-xs ms-2"></i>
           <span class="text-xs font-bold text-slate-600">Zaman Aralığı:</span>
@@ -374,18 +372,11 @@
         </div>
       </div>
 
-      <!-- Finansal İstatistik Kartları -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="white-card p-5 border-l-4 border-l-emerald-500">
           <p class="text-xs font-bold uppercase text-slate-500">Toplam Tamamlanan Gelir</p>
           <h3 id="analiz-yillik-gelir" class="text-2xl font-extrabold text-slate-900 mt-1">0 TL</h3>
           <p class="text-[11px] text-slate-500 mt-1">Seçilen döneme ait toplam ciro</p>
-        </div>
-
-        <div class="white-card p-5 border-l-4 border-l-blue-500">
-          <p class="text-xs font-bold uppercase text-slate-500">Aylık Ortalama Gelir</p>
-          <h3 id="analiz-aylik-gelir" class="text-2xl font-extrabold text-slate-900 mt-1">0 TL</h3>
-          <p class="text-[11px] text-slate-500 mt-1">Hesaplanan ortalama aylık getiri</p>
         </div>
 
         <div class="white-card p-5 border-l-4 border-l-purple-500">
@@ -401,7 +392,6 @@
         </div>
       </div>
 
-      <!-- Popüler ve Pasif Lokasyon Listesi -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="white-card p-5 space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -427,7 +417,6 @@
       </div>
     </div>
 
-    <!-- EKRAN 3: GEÇMİŞ İŞLEMLER VE ARŞİV TABLOSU (ARAMA KUTUSU EKLENDİ) -->
     <div id="adminEkran-gecmis" class="space-y-6 hidden">
       <div class="white-card p-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div>
@@ -435,7 +424,6 @@
           <p class="text-xs text-slate-500 mb-0">Süresi dolduğu için otomatik silinen veya sonlandırılan kiralama arşivi.</p>
         </div>
 
-        <!-- GEÇMİŞ İŞLEMLER ARAMA İNPUTU -->
         <div class="relative w-full sm:w-72">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
           <input type="text" id="gecmisSearchInput" oninput="gecmisTablosunuGoster()" 
@@ -470,14 +458,79 @@
   </main>
 </div>
 
-<!-- MODAL 1: SABİT BİLLBOARD BİLGİLERİ EKLEME/DÜZENLEME -->
+<!-- MODAL: YÖNETİCİ VERİ / RAPOR İNDİRME SEÇENEKLERİ -->
+<div class="modal fade" id="veriIndirModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-xl">
+      <div class="p-6 border-b border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-slate-900 mb-0">PDF Veri & Rapor İndir</h4>
+            <p class="text-xs text-slate-500 mb-0">İndirmek istediğiniz veri kategorisini seçin.</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="p-6 space-y-3">
+        
+        <button onclick="raporPdfOlustur('billboardlar')" class="w-full p-4 bg-slate-50 hover:bg-blue-50/60 border border-slate-200 hover:border-blue-300 rounded-xl flex items-center justify-between transition group text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+              <i class="fa-solid fa-rectangle-ad"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-sm text-slate-900 group-hover:text-blue-700 mb-0.5">Mevcut Billboard / Megaboard Durumu</h5>
+              <p class="text-xs text-slate-500 mb-0">Aktif kiralama, marka, afiş ve doluluk durumu listesi.</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-download text-slate-400 group-hover:text-blue-600"></i>
+        </button>
+
+        <button onclick="raporPdfOlustur('gelir')" class="w-full p-4 bg-slate-50 hover:bg-emerald-50/60 border border-slate-200 hover:border-emerald-300 rounded-xl flex items-center justify-between transition group text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 mb-0.5">Gelir & Finansal Analiz Raporu</h5>
+              <p class="text-xs text-slate-500 mb-0">Seçili döneme ait toplam ciro ve kiralama sayıları.</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-download text-slate-400 group-hover:text-emerald-600"></i>
+        </button>
+
+        <button onclick="raporPdfOlustur('gecmis')" class="w-full p-4 bg-slate-50 hover:bg-purple-50/60 border border-slate-200 hover:border-purple-300 rounded-xl flex items-center justify-between transition group text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div>
+              <h5 class="font-bold text-sm text-slate-900 group-hover:text-purple-700 mb-0.5">Geçmiş & Arşiv İşlemleri</h5>
+              <p class="text-xs text-slate-500 mb-0">Süresi dolmuş veya önceden yapılmış tüm kiralama arşivi.</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-download text-slate-400 group-hover:text-purple-600"></i>
+        </button>
+
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button type="button" class="btn btn-light rounded-xl text-sm font-semibold border-slate-300 px-5" data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 1: SABİT BİLLBOARD BİLGİLERİ -->
 <div class="modal fade" id="sabitBillboardModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content shadow-xl">
       <div class="p-6 border-b border-slate-200 flex items-center justify-between">
         <div>
-          <h4 class="text-lg font-bold text-slate-900 mb-0">Sabit Reklam Panosu Bilgileri Tanımla</h4>
-          <p class="text-xs text-slate-500 mt-0.5">Buradaki fotoğraf, konum ve açıklama bilgisi kiralama bitse de sabit kalır.</p>
+          <h4 class="text-lg font-bold text-slate-900 mb-0">Sabit Reklam Panosu Bilgileri & PDF Şablonu</h4>
+          <p class="text-xs text-slate-500 mt-0.5">Buradaki fotoğraf ve PDF özel metni müşterilerin indireceği katalog dosyasına yansır.</p>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -503,15 +556,23 @@
         </div>
 
         <div>
-          <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Hakkında Yazı / Açıklama (Vitrin İçin)</label>
-          <textarea id="sabitAciklama" rows="3" class="form-control text-sm rounded-xl p-3" placeholder="Örn: Sapanca ana giriş kavşağında yüksek görünürlüklü LED aydınlatmalı sabit reklam alanı."></textarea>
+          <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Açıklaması (Vitrin İçin)</label>
+          <textarea id="sabitAciklama" rows="2" class="form-control text-sm rounded-xl p-3" placeholder="Örn: Sapanca ana giriş kavşağında yüksek görünürlüklü LED aydınlatmalı sabit reklam alanı."></textarea>
+        </div>
+
+        <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-200">
+          <label class="form-label text-xs font-bold text-blue-900 uppercase mb-1">
+            <i class="fa-solid fa-file-pdf me-1"></i> İndirilen PDF Belgesine Özel Metin / Şablon Notu
+          </label>
+          <textarea id="sabitPdfMetin" rows="3" class="form-control text-sm rounded-xl p-2.5" placeholder="Müşteri PDF indirdiğinde billboard fiyat tarifesinin altında bu özel teklif notu/şablon metni gözükecektir."></textarea>
         </div>
 
         <div>
           <label class="form-label text-xs font-bold text-slate-600 uppercase">Pano Sabit Görseli / Fotoğrafı</label>
           <input type="text" id="sabitFotoUrl" class="form-control text-sm rounded-xl py-2.5 mb-2" placeholder="Görsel Bağlantısı (URL)">
-          <input type="file" id="sabitFotoFile" accept="image/*" onchange="sabitResimBase64Cevir()" class="form-control text-xs rounded-xl">
+          <input type="file" id="sabitFotoFile" accept="image/*" onchange="sabitResimSikistirVeYukle(event)" class="form-control text-xs rounded-xl">
           <input type="hidden" id="sabitFotoBase64">
+          <div id="fotoStatus" class="text-xs font-bold text-emerald-600 mt-1 hidden">✓ Fotoğraf hazırlandı ve optimize edildi.</div>
         </div>
       </div>
       <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-3">
@@ -577,7 +638,6 @@
             <input type="date" id="bit" onchange="otomatikFiyatHesapla()" class="form-control text-sm rounded-xl py-2.5">
           </div>
 
-          <!-- OTOMATİK HESAPLANAN ÜCRET KUTUSU -->
           <div class="col-12">
             <div class="bg-blue-50/70 border border-blue-200 p-4 rounded-xl flex items-center justify-between">
               <div>
@@ -701,9 +761,14 @@
             <h3 id="vitrinModalKonum" class="text-xl font-extrabold text-slate-900 mb-0">-</h3>
             <p id="vitrinModalAfis" class="text-sm font-medium text-blue-600 mb-0">-</p>
           </div>
-          <a id="vitrinModalMaps" href="#" target="_blank" class="btn btn-sm btn-outline-danger font-bold rounded-xl flex items-center gap-1.5 shrink-0">
-            <i class="fa-solid fa-map-location-dot"></i> Harita / Konum
-          </a>
+          <div class="flex items-center gap-2">
+            <button id="vitrinModalPdfBtn" onclick="" class="btn btn-sm btn-primary bg-blue-600 hover:bg-blue-700 font-bold rounded-xl flex items-center gap-1.5 shrink-0">
+              <i class="fa-solid fa-file-pdf"></i> PDF İndir
+            </button>
+            <a id="vitrinModalMaps" href="#" target="_blank" class="btn btn-sm btn-outline-danger font-bold rounded-xl flex items-center gap-1.5 shrink-0">
+              <i class="fa-solid fa-map-location-dot"></i> Harita
+            </a>
+          </div>
         </div>
 
         <div id="vitrinModalAciklamaBox" class="bg-blue-50/70 p-4 rounded-xl border border-blue-100 hidden">
@@ -751,9 +816,12 @@ const ADMIN_SIFRE = "1234";
 
 let myChart;
 let localVeriHafizasi = {}; 
+try {
+  localVeriHafizasi = JSON.parse(localStorage.getItem('sapanca_billboard_cache')) || {};
+} catch(e){}
+
 let gecerliFiltre = 'Hepsi';
 let gecerliVitrinFiltre = 'Hepsi';
-let duzenlenenDbKey = null;
 
 function selectboxlariDoldur() {
   const konumSelect = document.getElementById('konum');
@@ -777,7 +845,261 @@ function selectboxlariDoldur() {
 }
 selectboxlariDoldur();
 
-// BILLBOARD VE MEGABOARD FİYAT MOTORU (Sezon Dışı %40 İndirim Uygulaması)
+function turkceTemizle(str) {
+  if (!str) return "";
+  return str
+    .replace(/Ğ/g, "G").replace(/ğ/g, "g")
+    .replace(/Ü/g, "U").replace(/ü/g, "u")
+    .replace(/Ş/g, "S").replace(/ş/g, "s")
+    .replace(/İ/g, "I").replace(/ı/g, "i")
+    .replace(/Ö/g, "O").replace(/ö/g, "o")
+    .replace(/Ç/g, "C").replace(/ç/g, "c");
+}
+
+// YÖNETİM PANELİ MERKEZİ PDF VERİ İNDİRME MOTORU
+window.raporPdfOlustur = function(kategori) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const bugunTarih = new Date().toLocaleDateString('tr-TR');
+
+    doc.setFontSize(16);
+    doc.setTextColor(37, 99, 235);
+    doc.text("SAPANCA BELEDIYESI YONETIM RAPORU", 14, 18);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Rapor Tarihi: ${bugunTarih}`, 150, 18);
+
+    doc.setDrawColor(37, 99, 235);
+    doc.setLineWidth(0.6);
+    doc.line(14, 22, 196, 22);
+
+    const mainBoards = localVeriHafizasi.billboardlar || {};
+    const sabitBoards = localVeriHafizasi.sabitBillboardlar || {};
+    const gecmisVeriler = localVeriHafizasi.gecmisIslemler || {};
+
+    if (kategori === 'billboardlar') {
+      doc.setFontSize(12);
+      doc.setTextColor(15, 23, 42);
+      doc.text("Mevcut Billboard & Megaboard Durum Listesi", 14, 30);
+
+      const tableData = [];
+      billboardlar.forEach(bName => {
+        const bData = mainBoards[bName] || {};
+        const sabitData = sabitBoards[bName] || {};
+        const tur = bData.tur || sabitData.tur || 'Billboard';
+        const doluMu = !!(bData.marka || bData.afis);
+        const durumStr = doluMu ? "Dolu" : "Bos / Musait";
+
+        tableData.push([
+          turkceTemizle(bName),
+          tur,
+          durumStr,
+          turkceTemizle(bData.marka || '-'),
+          turkceTemizle(bData.afis || '-'),
+          bData.ucret ? `${Number(bData.ucret).toLocaleString('tr-TR')} TL` : '-'
+        ]);
+      });
+
+      doc.autoTable({
+        startY: 35,
+        head: [['Konum', 'Tur', 'Durum', 'Marka', 'Afis', 'Ucret']],
+        body: tableData,
+        headStyles: { fillColor: [37, 99, 235] },
+        theme: 'grid'
+      });
+
+      doc.save(`Billboard_Durum_Raporu_${bugunTarih.replace(/\./g, '_')}.pdf`);
+
+    } else if (kategori === 'gelir') {
+      doc.setFontSize(12);
+      doc.setTextColor(15, 23, 42);
+      doc.text("Gelir & Finansal Analiz Raporu", 14, 30);
+
+      let toplamCiro = 0;
+      let toplamIslemSayisi = 0;
+      let megaboardSayisi = 0;
+
+      Object.keys(gecmisVeriler).forEach(k => {
+        const item = gecmisVeriler[k];
+        toplamCiro += (Number(item.ucret) || 0);
+        toplamIslemSayisi++;
+        if (item.tur === 'Megaboard') megaboardSayisi++;
+      });
+
+      const megaboardOrani = toplamIslemSayisi > 0 ? Math.round((megaboardSayisi / toplamIslemSayisi) * 100) : 0;
+
+      doc.autoTable({
+        startY: 35,
+        head: [['Metrik', 'Deger']],
+        body: [
+          ['Toplam Tamamlanan Gelir (Ciro)', `${toplamCiro.toLocaleString('tr-TR')} TL`],
+          ['Tamamlanan Toplam Kiralama Sayisi', `${toplamIslemSayisi} Adet`],
+          ['Megaboard Kiralama Orani', `%${megaboardOrani}`]
+        ],
+        headStyles: { fillColor: [16, 185, 129] },
+        theme: 'grid'
+      });
+
+      doc.save(`Gelir_Analiz_Raporu_${bugunTarih.replace(/\./g, '_')}.pdf`);
+
+    } else if (kategori === 'gecmis') {
+      doc.setFontSize(12);
+      doc.setTextColor(15, 23, 42);
+      doc.text("Gecmis & Arsivlenmis Reklam Kayitlari", 14, 30);
+
+      const tableData = [];
+      Object.keys(gecmisVeriler).reverse().forEach(k => {
+        const item = gecmisVeriler[k];
+        tableData.push([
+          turkceTemizle(item.konum || '-'),
+          item.tur || 'Billboard',
+          turkceTemizle(item.marka || '-'),
+          turkceTemizle(item.afis || '-'),
+          `${tarihFormatla(item.bas)} - ${tarihFormatla(item.bit)}`,
+          item.ucret ? `${Number(item.ucret).toLocaleString('tr-TR')} TL` : '-'
+        ]);
+      });
+
+      doc.autoTable({
+        startY: 35,
+        head: [['Konum', 'Tur', 'Eski Marka', 'Afis Ad', 'Tarihler', 'Ucret']],
+        body: tableData,
+        headStyles: { fillColor: [147, 51, 234] },
+        theme: 'grid'
+      });
+
+      doc.save(`Gecmis_Islemler_Arsivi_${bugunTarih.replace(/\./g, '_')}.pdf`);
+    }
+
+    bootstrap.Modal.getInstance(document.getElementById('veriIndirModal'))?.hide();
+
+  } catch(err) {
+    alert("PDF raporu oluşturulurken hata oluştu: " + err.message);
+  }
+}
+
+// TEKİL BİLLBOARD PDF İNDİRME MOTORU
+window.pdfIndir = function(konumAdi) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const sabitBoards = localVeriHafizasi.sabitBillboardlar || {};
+    const mainBoards = localVeriHafizasi.billboardlar || {};
+
+    const bData = mainBoards[konumAdi] || {};
+    const sabitData = sabitBoards[konumAdi] || {};
+    const tur = bData.tur || sabitData.tur || 'Billboard';
+    
+    const ozelMetinRaw = sabitData.pdfMetin || sabitData.aciklama || "Bu pano icin belirlenmis genel kiralama ve mevzuat kurallari gecerlidir.";
+    
+    const ozelMetin = turkceTemizle(ozelMetinRaw);
+    const temizKonum = turkceTemizle(konumAdi);
+
+    doc.setFontSize(18);
+    doc.setTextColor(37, 99, 235);
+    doc.text("SAPANCA BELEDIYESI", 14, 20);
+
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text("Acik Hava Reklam Alanlari Katalog Bilgi Formu", 14, 27);
+    doc.text(`Tarih: ${new Date().toLocaleDateString('tr-TR')}`, 150, 27);
+
+    doc.setDrawColor(37, 99, 235);
+    doc.setLineWidth(0.8);
+    doc.line(14, 30, 196, 30);
+
+    doc.setFontSize(14);
+    doc.setTextColor(15, 23, 42);
+    doc.text(`Konum: ${temizKonum} (${tur})`, 14, 40);
+
+    let fiyatBody = [];
+    if (tur === 'Megaboard') {
+      fiyatBody = [
+        ['1 Ay Standart', '20.000 TL / Ay', 'Sezon disi %40 Indirimli (Net: 12.000 TL)'],
+        ['3 Ay Kiralama', '16.500 TL / Ay', 'Sezon disi %40 Indirimli'],
+        ['6 Ay Kiralama', '12.500 TL / Ay', 'Sezon disi %40 Indirimli'],
+        ['12 Ay Yillik', '25.000 TL / Ay', 'Sezon disi %40 Indirimli']
+      ];
+    } else {
+      fiyatBody = [
+        ['1 Ay Standart', '16.500 TL / Ay', 'Sezon disi %40 Indirimli (Net: 9.900 TL)'],
+        ['3 Ay Kiralama', '13.500 TL / Ay', 'Sezon disi %40 Indirimli'],
+        ['6 Ay Kiralama', '10.000 TL / Ay', 'Sezon disi %40 Indirimli'],
+        ['12 Ay Yillik', '20.000 TL / Ay', 'Sezon disi %40 Indirimli']
+      ];
+    }
+
+    doc.autoTable({
+      startY: 47,
+      head: [['Kiralama Suresi', 'Birim Fiyat', 'Sezon / Kampanya Notu']],
+      body: fiyatBody,
+      headStyles: { fillColor: [37, 99, 235] },
+      theme: 'grid'
+    });
+
+    const finalY = doc.lastAutoTable.finalY + 12;
+
+    doc.setFontSize(11);
+    doc.setTextColor(30, 64, 175);
+    doc.text("OZEL PANO NOTU & KIRALAMA SARTLARI:", 14, finalY);
+
+    doc.setFontSize(10);
+    doc.setTextColor(51, 65, 85);
+    
+    const splitText = doc.splitTextToSize(ozelMetin, 180);
+    doc.text(splitText, 14, finalY + 7);
+
+    doc.save(`${temizKonum.replace(/\s+/g, '_')}_Bilgi_Karti.pdf`);
+  } catch(err) {
+    alert("PDF indirme başlatılamadı: " + err.message);
+  }
+}
+
+// RESİM SIKIŞTIRMA
+window.sabitResimSikistirVeYukle = function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 800;
+      const MAX_HEIGHT = 600;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('sabitFotoBase64').value = compressedBase64;
+      document.getElementById('fotoStatus').classList.remove('hidden');
+    }
+    img.src = event.target.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+// FİYAT HESAPLAMA MOTORU
 window.otomatikFiyatHesapla = function(basStr, bitStr) {
   const baslikInput = basStr || document.getElementById('bas')?.value;
   const bitisInput = bitStr || document.getElementById('bit')?.value;
@@ -823,8 +1145,7 @@ window.otomatikFiyatHesapla = function(basStr, bitStr) {
 
   let brutTutar = aySayisi * birimFiyat;
 
-  // 5, 6, 7, 8, 9 Aylar Dışında %40 İndirim Uygulaması
-  const sezonAylari = [4, 5, 6, 7, 8]; // Mayıs - Eylül
+  const sezonAylari = [4, 5, 6, 7, 8];
   let sezonDisiMı = true;
   let tempDate = new Date(d1);
   while (tempDate <= d2) {
@@ -851,7 +1172,6 @@ window.otomatikFiyatHesapla = function(basStr, bitStr) {
   return { toplamTutar: netTutar, detayText: detayMetni };
 }
 
-// OTOMATİK SÜRE KONTROLÜ VE ARŞİVLEME MOTORU
 function otomatiksuresiBitenleriTemizle(allData) {
   const activeBoards = allData.billboardlar || {};
   const bugun = new Date();
@@ -882,7 +1202,6 @@ function otomatiksuresiBitenleriTemizle(allData) {
   });
 }
 
-// LOGO & SITE AYARLARI KAYDETME
 window.logoBase64Cevir = function() {
   const file = document.getElementById('settingLogoFile').files[0];
   if (!file) return;
@@ -924,14 +1243,11 @@ window.ayarlariKaydet = function() {
   };
 
   set(ref(db, 'siteSettings'), settingsObj).then(() => {
-    const modalEl = document.getElementById('ayarlarModal');
-    const modalInstance = bootstrap.Modal.getInstance(modalEl);
-    if (modalInstance) modalInstance.hide();
-    alert("Site ayarları ve logo başarıyla kaydedildi!");
+    bootstrap.Modal.getInstance(document.getElementById('ayarlarModal'))?.hide();
+    alert("Site ayarları başarıyla kaydedildi!");
   }).catch(err => alert("Ayarlar kaydedilirken hata oluştu: " + err.message));
 }
 
-// Firebase Realtime Listener
 onValue(ref(db), (snapshot) => {
   const allData = snapshot.val() || {};
   localVeriHafizasi = allData;
@@ -969,7 +1285,7 @@ onValue(ref(db), (snapshot) => {
   }
 });
 
-// GÜNCELLENMİŞ ANALİZ VE KİRALAMA RAPORU MOTORU
+// AYLIK ORTALAMA GELİR ÇIKARILMIŞ ANALİZ HESAPLAMA
 window.analizleriGuncelle = function() {
   const gecmis = localVeriHafizasi.gecmisIslemler || {};
   const zamanFiltresi = document.getElementById('analizZamanFiltresi')?.value || 'hepsi';
@@ -1007,7 +1323,6 @@ window.analizleriGuncelle = function() {
   });
 
   document.getElementById('analiz-yillik-gelir').innerText = `${toplamCiro.toLocaleString('tr-TR')} TL`;
-  document.getElementById('analiz-aylik-gelir').innerText = `${Math.round(toplamCiro / 12).toLocaleString('tr-TR')} TL`;
   document.getElementById('analiz-toplam-islem').innerText = toplamIslemSayisi;
   
   const megaboardOrani = toplamIslemSayisi > 0 ? Math.round((megaboardSayisi / toplamIslemSayisi) * 100) : 0;
@@ -1052,15 +1367,16 @@ window.analizleriGuncelle = function() {
   }
 }
 
-// SABİT BİLLBOARD BİLGİLERİ İŞLEMLERİ
 window.sabitFormuTemizle = function() {
   document.getElementById('sabitKonumSelect').value = "";
   document.getElementById('sabitPanoTuru').value = "Billboard";
   document.getElementById('sabitMapsUrl').value = "";
   document.getElementById('sabitAciklama').value = "";
+  document.getElementById('sabitPdfMetin').value = "";
   document.getElementById('sabitFotoUrl').value = "";
   document.getElementById('sabitFotoBase64').value = "";
   document.getElementById('sabitFotoFile').value = "";
+  document.getElementById('fotoStatus').classList.add('hidden');
 }
 
 window.sabitBilgiYukle = function() {
@@ -1071,18 +1387,10 @@ window.sabitBilgiYukle = function() {
   document.getElementById('sabitPanoTuru').value = sabitVeri.tur || "Billboard";
   document.getElementById('sabitMapsUrl').value = sabitVeri.mapsUrl || "";
   document.getElementById('sabitAciklama').value = sabitVeri.aciklama || "";
+  document.getElementById('sabitPdfMetin').value = sabitVeri.pdfMetin || "";
   document.getElementById('sabitFotoUrl').value = sabitVeri.foto && !sabitVeri.foto.startsWith('data:') ? sabitVeri.foto : "";
   document.getElementById('sabitFotoBase64').value = sabitVeri.foto && sabitVeri.foto.startsWith('data:') ? sabitVeri.foto : "";
-}
-
-window.sabitResimBase64Cevir = function() {
-  const file = document.getElementById('sabitFotoFile').files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onloadend = function() {
-    document.getElementById('sabitFotoBase64').value = reader.result;
-  }
-  reader.readAsDataURL(file);
+  document.getElementById('fotoStatus').classList.add('hidden');
 }
 
 window.sabitBilgiKaydet = function() {
@@ -1095,21 +1403,28 @@ window.sabitBilgiKaydet = function() {
   const tur = document.getElementById('sabitPanoTuru').value;
   const mapsUrl = document.getElementById('sabitMapsUrl').value;
   const aciklama = document.getElementById('sabitAciklama').value;
+  const pdfMetin = document.getElementById('sabitPdfMetin').value;
   const fotoUrl = document.getElementById('sabitFotoUrl').value;
   const fotoBase64 = document.getElementById('sabitFotoBase64').value;
   const foto = fotoBase64 || fotoUrl || "";
 
+  if(!localVeriHafizasi.sabitBillboardlar) localVeriHafizasi.sabitBillboardlar = {};
+  localVeriHafizasi.sabitBillboardlar[konum] = { tur, mapsUrl, aciklama, pdfMetin, foto, guncellemeTarihi: Date.now() };
+  try {
+    localStorage.setItem('sapanca_billboard_cache', JSON.stringify(localVeriHafizasi));
+  } catch(e){}
+
+  kataloguGoster();
+
   set(ref(db, 'sabitBillboardlar/' + konum), {
-    tur, mapsUrl, aciklama, foto, guncellemeTarihi: Date.now()
+    tur, mapsUrl, aciklama, pdfMetin, foto, guncellemeTarihi: Date.now()
   }).then(() => {
     bootstrap.Modal.getInstance(document.getElementById('sabitBillboardModal'))?.hide();
     sabitFormuTemizle();
   }).catch(err => alert("Hata: " + err.message));
 }
 
-// YENİ KİRALAMA EKLEME
 window.formuTemizle = function() {
-  duzenlenenDbKey = null;
   document.getElementById('konum').value = "";
   document.getElementById('panoTuru').value = "Billboard";
   document.getElementById('marka').value = "";
@@ -1149,7 +1464,6 @@ window.kaydet = function() {
   }).catch(err => alert("Kayıt hatası: " + err.message));
 }
 
-// SOL MENÜ GEÇİŞLERİ
 window.adminMenuDegistir = function(hedefSekme) {
   document.getElementById('adminEkran-dashboard').classList.add('hidden');
   document.getElementById('adminEkran-analiz').classList.add('hidden');
@@ -1224,7 +1538,6 @@ function kalanGunBul(bitisStr) {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
-// VİTRİN KATALOĞU GÖSTER
 window.kataloguGoster = function() {
   const grid = document.getElementById('katalogGrid');
   if (!grid) return;
@@ -1250,15 +1563,14 @@ window.kataloguGoster = function() {
     }
 
     const card = document.createElement('div');
-    card.className = "white-card catalog-card overflow-hidden flex flex-col justify-between";
-    card.onclick = () => vitrinDetayAc(bName, bData, sabitData);
+    card.className = "white-card catalog-card overflow-hidden flex flex-col justify-between cursor-pointer";
 
     const fotoUrl = sabitData.foto || 'https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?auto=format&fit=crop&w=800&q=80';
     const panoTur = bData.tur || sabitData.tur || 'Billboard';
 
     if (doluMu) {
       card.innerHTML = `
-        <div>
+        <div onclick="vitrinDetayAc('${bName}')">
           <div class="relative h-48 bg-slate-100 overflow-hidden">
             <img src="${fotoUrl}" loading="lazy" class="w-full h-full object-cover" alt="${bName}">
             <div class="absolute top-3 left-3">
@@ -1271,7 +1583,7 @@ window.kataloguGoster = function() {
             </div>
           </div>
           <div class="p-4 space-y-2">
-            <h3 class="font-bold text-base text-slate-900 group-hover:text-blue-600 transition flex items-center justify-between">
+            <h3 class="font-bold text-base text-slate-900 flex items-center justify-between">
               <span>${bName}</span>
               <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
             </h3>
@@ -1285,13 +1597,16 @@ window.kataloguGoster = function() {
             </div>
           </div>
         </div>
-        <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end text-xs font-medium text-slate-500">
-          <span class="text-blue-600 font-bold group-hover:underline">Detaylar & Location &rarr;</span>
+        <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <button onclick="pdfIndir('${bName}')" class="btn btn-sm btn-outline-primary text-xs font-bold rounded-lg flex items-center gap-1">
+            <i class="fa-solid fa-file-pdf"></i> PDF İndir
+          </button>
+          <span onclick="vitrinDetayAc('${bName}')" class="text-xs text-blue-600 font-bold hover:underline">Detaylar &rarr;</span>
         </div>
       `;
     } else {
       card.innerHTML = `
-        <div>
+        <div onclick="vitrinDetayAc('${bName}')">
           <div class="relative h-48 bg-slate-100 overflow-hidden">
             <img src="${fotoUrl}" loading="lazy" class="w-full h-full object-cover" alt="${bName}">
             <div class="absolute top-3 left-3">
@@ -1309,12 +1624,15 @@ window.kataloguGoster = function() {
               <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
             </h3>
             <p class="text-xs text-slate-500 font-normal line-clamp-2">
-              ${sabitData.aciklama || 'Bu pano noktası şu anda boş durumdadır. Reklam kiralama detayları için tıklayın.'}
+              ${sabitData.aciklama || 'Bu pano noktası şu anda boş durumdadır. Kiralama şartları ve görsel detay için tıklayın.'}
             </p>
           </div>
         </div>
-        <div class="px-4 py-3 bg-emerald-50/50 border-t border-emerald-100 flex items-center justify-end text-xs font-bold text-emerald-700">
-          <span>Harita & Bilgi &rarr;</span>
+        <div class="px-4 py-3 bg-emerald-50/50 border-t border-emerald-100 flex items-center justify-between">
+          <button onclick="pdfIndir('${bName}')" class="btn btn-sm btn-primary bg-blue-600 hover:bg-blue-700 text-xs font-bold rounded-lg flex items-center gap-1">
+            <i class="fa-solid fa-file-pdf"></i> PDF İndir
+          </button>
+          <span onclick="vitrinDetayAc('${bName}')" class="text-xs text-emerald-700 font-bold hover:underline">Harita & Bilgi &rarr;</span>
         </div>
       `;
     }
@@ -1334,7 +1652,13 @@ window.vitrinFiltrele = function() {
   kataloguGoster();
 }
 
-window.vitrinDetayAc = function(konumAdi, data, sabitData) {
+window.vitrinDetayAc = function(konumAdi) {
+  const mainBoards = localVeriHafizasi.billboardlar || {};
+  const sabitBoards = localVeriHafizasi.sabitBillboardlar || {};
+
+  const data = mainBoards[konumAdi] || {};
+  const sabitData = sabitBoards[konumAdi] || {};
+
   const modal = new bootstrap.Modal(document.getElementById('vitrinDetayModal'));
   
   document.getElementById('vitrinModalKonum').innerText = konumAdi;
@@ -1364,6 +1688,9 @@ window.vitrinDetayAc = function(konumAdi, data, sabitData) {
     aciklamaBox.classList.add('hidden');
   }
 
+  const pdfBtn = document.getElementById('vitrinModalPdfBtn');
+  pdfBtn.onclick = () => pdfIndir(konumAdi);
+
   const mapsBtn = document.getElementById('vitrinModalMaps');
   if (sabitData.mapsUrl) {
     mapsBtn.href = sabitData.mapsUrl;
@@ -1376,7 +1703,6 @@ window.vitrinDetayAc = function(konumAdi, data, sabitData) {
   modal.show();
 }
 
-// YÖNETİM PANELİ TABLO İŞLEMLERİ
 window.tabloyuGoster = function(filtre) {
   gecerliFiltre = filtre;
   
@@ -1458,7 +1784,6 @@ window.tabloyuGoster = function(filtre) {
   });
 }
 
-// GEÇMİŞ İŞLEMLER TABLOSU (ARAMA FİLTRESİ ENTEGRE EDİLDİ)
 window.gecmisTablosunuGoster = function() {
   const tbody = document.getElementById('gecmisTabloGövdesi');
   if (!tbody) return;
@@ -1473,7 +1798,6 @@ window.gecmisTablosunuGoster = function() {
   keys.forEach(k => {
     const item = gecmisVeriler[k];
     
-    // Arama Kelimesi Filtreleme Kontrolü
     if (searchTxt) {
       const matchKonum = (item.konum || "").toLowerCase().includes(searchTxt);
       const matchTur = (item.tur || "").toLowerCase().includes(searchTxt);
@@ -1524,7 +1848,6 @@ window.filtreleVeAra = function() {
   tabloyuGoster(gecerliFiltre);
 }
 
-// Düzenle
 window.duzenleAnaModal = function(bName) {
   const bData = (localVeriHafizasi.billboardlar || {})[bName] || {};
   const sabitData = (localVeriHafizasi.sabitBillboardlar || {})[bName] || {};
@@ -1556,7 +1879,6 @@ window.silAnaRecord = function(bName) {
   }
 }
 
-// İstatistiki Bilgiler
 function istatistikleriGuncelle() {
   const mainBoards = localVeriHafizasi.billboardlar || {};
   let doluSayisi = 0;
